@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
+
+    <!--配置数据库-->
+    <bean class="org.apache.commons.dbcp.BasicDataSource" id="basicDataSource">
+        <property name="driverClassName" value="${driver}"></property>
+        <property name="url" value="${url}"></property>
+        <property name="username" value="${name}"></property>
+        <property name="password" value="${password}"></property>
+        <!--最大链接-->
+        <property name="maxActive" value="10"></property>
+        <!--最大空闲-->
+        <property name="maxIdle" value="3"></property>
+    </bean>
+
+
+    <context:component-scan base-package="com.fck.myservice"></context:component-scan>
+
+
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sessionFactory">
+        <!--加载数据源-->
+        <property name="dataSource" ref="basicDataSource"></property>
+        <!--加载mybatis核心文件-->
+        <property name="configLocation" value="classpath:sqlMapperConfig.xml"></property>
+        <property name="typeAliasesPackage" value="com.fck.beans"></property>
+    </bean>
+
+    <!--配置扫描mapper包-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" id="mapperScannerConfigurer">
+        <property name="basePackage" value="com.fck.mapper"></property>
+    </bean>
+
+
+</beans>
