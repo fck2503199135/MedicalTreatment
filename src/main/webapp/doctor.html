@@ -8,12 +8,14 @@
     <link rel="stylesheet" href="./vendor/simple-line-icons/css/simple-line-icons.css">
     <link rel="stylesheet" href="./vendor/font-awesome/css/fontawesome-all.min.css">
     <link rel="stylesheet" href="./css/styles.css">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+
+    <link rel="stylesheet" href="css/bootstrap-table.min.css"/>
     <script src="./vendor/jquery/jquery.min.js"></script>
-    <script src="./vendor/popper.js/popper.min.js"></script>
+    <!--<script src="./vendor/popper.js/popper.min.js"></script>-->
     <script src="./vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="./vendor/chart.js/chart.min.js"></script>
-    <script src="./js/carbon.js"></script>
-    <script src="./js/demo.js"></script>
+
     <script src="js/bootstrap-table.min.js"></script>
     <script src="js/bootstrap-table-zh-CN.min.js"></script>
 
@@ -49,14 +51,14 @@
                 alert(serialize);
                 $.ajax({
                     type: "post",
-                    url: "addGoods" ,
+                    url: "addDoctor" ,
                     data:serialize,
                     dataType: "json",//声明返回数据格式是json
                     success: function (data) {
                         // initPage(data);
                         $("#tab").bootstrapTable("refresh");
 
-                        $("#addGoods").modal("hide");
+                        $("#addDoctor").modal("hide");
                     },
                     // dateType: "json",
                 });
@@ -71,14 +73,14 @@
                 alert(serialize);
                 $.ajax({
                     type: "post",
-                    url: "updateGoods" ,
+                    url: "updateDoctor" ,
                     data:serialize,
                     dataType: "json",//声明返回数据格式是json
                     success: function (data) {
                         // initPage(data);
                         $("#tab").bootstrapTable("refresh");
 
-                        $("#updateGoods").modal("hide");
+                        $("#updateDoctor").modal("hide");
                     },
                     // dateType: "json",
 
@@ -99,20 +101,14 @@
                 //可供选择的每页的行数（*）
                 height:500,
                 columns: [{
-                    field:'gid',
+                    field:'did',
                     title:'编号',
                     align:'center',
                 }, {
-                    field: 'gname',
+                    field: 'dname',
                     title: '商品名称',
                     align:'center',
                 }, {
-                    field: 'gprice',
-                    title: '价格',
-                    align:'center',
-
-                },
-                    {
                         field: 'cname',
                         title: '商品类别',
                         align:'center',
@@ -136,8 +132,8 @@
             return{
                 limit:params.limit,
                 offset:params.offset,
-                "cid":$("#category3").val(),
-                "gname":$("#searchname").val()
+                // "cid":$("#category3").val(),
+                // "gname":$("#searchname").val()
             }
         }
 
@@ -193,7 +189,7 @@
     <p>
 
     <form action="" id="search">
-        <div class="col-sm-2  col-xs-offset-3">
+        <div class="col-sm-2  ">
             <input type="text" id="searchname" class=" form-control input-sm" placeholder="输入文字搜索">
         </div>
         <!--<div class="col-xs-2 ">-->
@@ -208,7 +204,7 @@
     </form>
 
 
-    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#adddoctor">添加医生</button>
+    <button class="btn btn-primary btn-xm" data-toggle="modal" data-target="#adddoctor" >添加医生</button>
 
     </p>
 
