@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.fck.MedicinalMapper">
+
+    <resultMap id="medic" type="medicinal">
+        <id column="mid" property="mid"></id>
+        <result column="mname" property="mname"></result>
+        <result column="mcount" property="mcount"></result>
+        <result column="mspec" property="mspec"></result>
+        <result column="mfactory" property="mfactory"></result>
+        <result column="mdate" property="mdate"></result>
+        <association property="type" javaType="mtype">
+            <id column="tid" property="tid"></id>
+            <result column="tname" property="tname"></result>
+        </association>
+    </resultMap>
+
+
+    <sql id="medics">mid,mname,mcout,mspec,mfactory,mdate,tname</sql>
+
+    <select id="getAll" resultMap="medic">select <include refid="medics"></include> from medicinal,mtype where medicinal.tid=mtype.tid</select>
+
+
+</mapper>
