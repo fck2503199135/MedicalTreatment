@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>doctor</title>
+    <link rel="stylesheet" href="./vendor/simple-line-icons/css/simple-line-icons.css">
+    <link rel="stylesheet" href="./vendor/font-awesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
+    <script src="./vendor/jquery/jquery.min.js"></script>
+    <script src="./vendor/popper.js/popper.min.js"></script>
+    <script src="./vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="./vendor/chart.js/chart.min.js"></script>
+    <script src="./js/carbon.js"></script>
+    <script src="./js/demo.js"></script>
+    <script src="js/bootstrap-table.min.js"></script>
+    <script src="js/bootstrap-table-zh-CN.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            // $.ajax({
+            //     type:"get",
+            //     url:"getAllCategory",
+            //     dataType:"json",
+            //     success:function (msg) {
+            //
+            //         // $("#category3").append("<option value='0'>请选择</option>")
+            //         // for (var i=0;i<msg.length;i++){
+            //         //     $("#category").append("<option value="+msg[i].cid+">"+msg[i].cname+"</option>")
+            //         //     $("#category2").append("<option value="+msg[i].cid+">"+msg[i].cname+"</option>")
+            //         //     $("#category3").append("<option value="+msg[i].cid+">"+msg[i].cname+"</option>")
+            //         // }
+            //     }
+            // });
+
+            //查询按钮
+            $("#searchBtn").click(function () {
+
+                $("#tab").bootstrapTable("refresh");
+
+
+            })
+
+            // 点击添加提交保存按钮---------------------------++++++
+            $("#addbtn").click(function () {
+
+                var  serialize=$("#addform").serialize();
+                alert(serialize);
+                $.ajax({
+                    type: "post",
+                    url: "addGoods" ,
+                    data:serialize,
+                    dataType: "json",//声明返回数据格式是json
+                    success: function (data) {
+                        // initPage(data);
+                        $("#tab").bootstrapTable("refresh");
+
+                        $("#addGoods").modal("hide");
+                    },
+                    // dateType: "json",
+                });
+
+            });
+
+
+            // 点击修改提交保存按钮---------------------------++++++
+            $("#updatebtn").click(function () {
+
+                var  serialize=$("#updateform").serialize();
+                alert(serialize);
+                $.ajax({
+                    type: "post",
+                    url: "updateGoods" ,
+                    data:serialize,
+                    dataType: "json",//声明返回数据格式是json
+                    success: function (data) {
+                        // initPage(data);
+                        $("#tab").bootstrapTable("refresh");
+
+                        $("#updateGoods").modal("hide");
+                    },
+                    // dateType: "json",
+
+                });
+
+            });
+
+
+            $('#tab').bootstrapTable({
+                url: 'getAllDoctor',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                cache: false,
+                pagination:true,
+                queryParams: queryParams,            //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 5,                       //每页的记录行数（*）
+                pageList: [10,25, 50, 100],
+                //可供选择的每页的行数（*）
+                height:500,
+                columns: [{
+                    field:'gid',
+                    title:'编号',
+                    align:'center',
+                }, {
+                    field: 'gname',
+                    title: '商品名称',
+                    align:'center',
+                }, {
+                    field: 'gprice',
+                    title: '价格',
+                    align:'center',
+
+                },
+                    {
+                        field: 'cname',
+                        title: '商品类别',
+                        align:'center',
+                    }, {
+                        field: 'gid',
+                        title: '操作',
+                        align:'center',
+                        formatter: function (value, row, index) {
+
+                            console.log(value+","+row.name+","+index);
+
+                            return '<button class="btn btn-primary btn-xs" onclick="edit('+value+')">修改</button><button onclick="dels('+value+')" class="btn btn-danger btn-xs">删除</button>'
+                        }
+                    }]
+            });
+
+
+        })
+        function queryParams(params) {
+
+            return{
+                limit:params.limit,
+                offset:params.offset,
+                "cid":$("#category3").val(),
+                "gname":$("#searchname").val()
+            }
+        }
+
+        function  dels(gid) {
+
+            alert(11);
+            $.ajax({
+                type: "get",
+                url: "delGoods",
+                data: "gid=" + gid,
+                dataType: "json",//声明返回数据格式是json
+                success: function (data) {
+                    alert("删除成功！")
+                    $("#tab").bootstrapTable("refresh");
+
+                },
+
+            });
+        }
+
+        function  edit(gid) {
+            $.ajax({
+                type: "POST",
+                url: "getGoodsByGid",
+                data: "gid=" + gid,
+                dataType: "json",//声明返回数据格式是json
+                success: function (good) {
+                    alert(good)
+
+                    $("#updategid").val(good.gid);
+                    $("#updategname").val(good.gname);
+
+                    $("#updategprice").val(good.gprice);
+                    $("#updatecid").val(good.cid);
+                    // alert(111)
+                    // alert("返回数值为"+good)
+                    $("#updateGoods").modal("show");
+
+                },
+                dateType: "json"
+            });
+
+        }
+
+    </script>
+
+</head>
+<body class="">
+<div class="container">
+
+
+    <h3 align="center">医生管理</h3>
+    <p>
+
+    <form action="" id="search">
+        <div class="col-sm-2  col-xs-offset-3">
+            <input type="text" id="searchname" class=" form-control input-sm" placeholder="输入文字搜索">
+        </div>
+        <!--<div class="col-xs-2 ">-->
+
+            <!--<select class="form-control" id="category3">-->
+
+            <!--</select>-->
+        <!--</div>-->
+        <div class="col-xs-2">
+            <button class="btn btn-primary btn-xs " type="button" id="searchBtn">查 询</button>
+        </div>
+    </form>
+
+
+    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#adddoctor">添加医生</button>
+
+    </p>
+
+        <table class="table table-bordered" id="tab">
+
+        </table>
+</div>
+
+
+<!--添加-->
+
+<div class="modal fade" id="adddoctor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">添加</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal"  id="addform">
+                    <div class="form-group ">
+                        <label class="col-xs-4 control-label">商品名称:</label>
+                        <div class="col-xs-4 ">
+                            <input type="text" class="form-control input-sm duiqi" name="gname">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label  class="col-xs-4 control-label">商品价格:</label>
+                        <div class="col-xs-4">
+                            <input type="text" class="form-control input-sm duiqi" name="gprice">
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+
+                        <label class="col-xs-4 control-label">商品种类:</label>
+                        <div class="col-xs-4">
+
+                            <!--<%&#45;&#45;<input type="text" class="form-control input-sm duiqi" name="cname">&#45;&#45;%>-->
+
+                            <select class="form-control" name="cid" id="category" >
+
+
+                                <!--<c:forEach items="${categoryList}" var="category">-->
+                                <!--<option value="${category.cid}">${category.cname}</option>-->
+                                <!--</c:forEach>-->
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <!--<button type="button" class="btn btn-xs btn-green" id="addbtn">添加</button>-->
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <!--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>-->
+                <button type="button" class="btn btn-primary" id="addbtn">提交</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!--修改-->
+<div class="modal fade" id="updatedoctor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" >修改</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-horizontal"  id="updateform">
+                    <div class="form-group ">
+                        <label class="col-xs-4 control-label">商品名称:</label>
+                        <div class="col-xs-4 ">
+                            <input type="hidden" id="updategid" name="gid">
+                            <input type="text" id="updategname" class="form-control input-sm duiqi" name="gname">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label  class="col-xs-4 control-label">商品价格:</label>
+                        <div class="col-xs-4">
+                            <input type="text" id="updategprice" class="form-control input-sm duiqi" name="gprice">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label">商品种类:</label>
+                        <div class="col-xs-4">
+                            <!--<%&#45;&#45;<input type="text" class="form-control input-sm duiqi" name="cname">&#45;&#45;%>-->
+
+                            <select class="form-control" name="cid" id="category2" >
+
+                                <!--<c:forEach items="${categoryList}" var="category">-->
+                                <!--<option value="${category.cid}">${category.cname}</option>-->
+                                <!--</c:forEach>-->
+                            </select>
+                        </div>
+                    </div>
+                    <!--<button type="button" class="btn btn-xs btn-green" id="addbtn">添加</button>-->
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <!--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>-->
+                <button type="button" class="btn btn-primary" id="updatebtn">提交</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+</body>
+</html>
