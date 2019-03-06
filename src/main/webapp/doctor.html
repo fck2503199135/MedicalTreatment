@@ -5,48 +5,57 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>doctor</title>
-    <link rel="stylesheet" href="./vendor/simple-line-icons/css/simple-line-icons.css">
-    <link rel="stylesheet" href="./vendor/font-awesome/css/fontawesome-all.min.css">
-    <link rel="stylesheet" href="./css/styles.css">
-
+    <!--<link rel="stylesheet" href="./vendor/simple-line-icons/css/simple-line-icons.css">-->
+    <!--<link rel="stylesheet" href="./vendor/font-awesome/css/fontawesome-all.min.css">-->
+    <!--<link rel="stylesheet" href="./css/styles.css">-->
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-
     <link rel="stylesheet" href="css/bootstrap-table.min.css"/>
-    <script src="./vendor/jquery/jquery.min.js"></script>
-    <!--<script src="./vendor/popper.js/popper.min.js"></script>-->
-    <script src="./vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!--<script type="text/javascript" src="./vendor/jquery/jquery.min.js"></script>-->
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="./vendor/popper.js/popper.min.js"></script>
+    <!--<script src="./js/bootstrap.js"></script>-->
+    <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script src="js/bootstrap-table.min.js"></script>
     <script src="js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="js/jquery.tabs.js"></script>
+    <!--<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">-->
+
+    <!--<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>-->
+
+    <!--<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+
 
     <script type="text/javascript">
         $(function () {
-            // $.ajax({
-            //     type:"get",
-            //     url:"getAllCategory",
-            //     dataType:"json",
-            //     success:function (msg) {
-            //
-            //         // $("#category3").append("<option value='0'>请选择</option>")
-            //         // for (var i=0;i<msg.length;i++){
-            //         //     $("#category").append("<option value="+msg[i].cid+">"+msg[i].cname+"</option>")
-            //         //     $("#category2").append("<option value="+msg[i].cid+">"+msg[i].cname+"</option>")
-            //         //     $("#category3").append("<option value="+msg[i].cid+">"+msg[i].cname+"</option>")
-            //         // }
-            //     }
-            // });
 
+
+            $.ajax({
+                type:"get",
+                url:"getAllDepts",
+                dataType:"json",
+                success:function (msg) {
+                        alert(msg)
+                    $("#dept").append("<option value='0'>请选择科室</option>")
+                    $("#dept2").append("<option value='0'>-请选择级别-</option>")
+                    for (var i=0;i<msg.length;i++){
+                        $("#dept").append("<option value="+msg[i].deptid+">"+msg[i].deptname+"</option>")
+                        $("#dept2").append("<option value="+msg[i].deptid+">"+msg[i].deptname+"</option>")
+                        $("#dept3").append("<option value="+msg[i].deptid+">"+msg[i].deptname+"</option>")
+                    }
+                }
+            });
             //查询按钮
             $("#searchBtn").click(function () {
-
                 $("#tab").bootstrapTable("refresh");
-
 
             })
 
             // 点击添加提交保存按钮---------------------------++++++
             $("#addbtn").click(function () {
-
                 var  serialize=$("#addform").serialize();
                 alert(serialize);
                 $.ajax({
@@ -56,9 +65,9 @@
                     dataType: "json",//声明返回数据格式是json
                     success: function (data) {
                         // initPage(data);
+                        alert(1)
                         $("#tab").bootstrapTable("refresh");
-
-                        $("#addDoctor").modal("hide");
+                        $("#add").modal("hide");
                     },
                     // dateType: "json",
                 });
@@ -106,21 +115,73 @@
                     align:'center',
                 }, {
                     field: 'dname',
-                    title: '商品名称',
+                    title: '姓名',
                     align:'center',
                 }, {
-                        field: 'cname',
-                        title: '商品类别',
+                        field: 'dsexStr',
+                        title: '性别',
                         align:'center',
-                    }, {
-                        field: 'gid',
+                    },
+                    {
+                        field: 'dage',
+                        title: '年龄',
+                        align:'center',
+                    },{
+                        field: 'dphone',
+                        title: '电话',
+                        align:'center',
+                    },{
+                        field: 'deptname',
+                        title: '科室',
+                        align:'center',
+                    },{
+                        field: 'postname',
+                        title: '职务',
+                        align:'center',
+                    },
+
+                    {
+                        field: 'did',
                         title: '操作',
                         align:'center',
                         formatter: function (value, row, index) {
 
                             console.log(value+","+row.name+","+index);
 
-                            return '<button class="btn btn-primary btn-xs" onclick="edit('+value+')">修改</button><button onclick="dels('+value+')" class="btn btn-danger btn-xs">删除</button>'
+                            return '<button class="btn btn-success btn-xs" onclick="edit('+value+')">编辑</button><button onclick="Prohibit('+value+')" class="btn btn-danger btn-xs">禁用</button>'
+                        }
+                    }]
+            });
+            $('#tab2').bootstrapTable({
+                url: 'getAllPost',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                cache: false,
+                pagination:true,
+                // queryParams: queryParams,            //传递参数（*）
+                sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 5,                       //每页的记录行数（*）
+                pageList: [10,25, 50, 100],
+                //可供选择的每页的行数（*）
+                height:500,
+                columns: [{
+                    field:'id',
+                    title:'编号',
+                    align:'center',
+                }, {
+                    field: 'postname',
+                    title: '姓名',
+                    align:'center',
+                },
+
+                    {
+                        field: 'id',
+                        title: '操作',
+                        align:'center',
+                        formatter: function (value, row, index) {
+
+                            console.log(value+","+row.name+","+index);
+
+                            return '<button class="btn btn-success btn-xs" onclick="edit('+value+')">查看权限</button>'
                         }
                     }]
             });
@@ -137,12 +198,12 @@
             }
         }
 
-        function  dels(gid) {
+        function  Prohibit(gid) {
 
             alert(11);
             $.ajax({
                 type: "get",
-                url: "delGoods",
+                url: "deld",
                 data: "gid=" + gid,
                 dataType: "json",//声明返回数据格式是json
                 success: function (data) {
@@ -154,23 +215,23 @@
             });
         }
 
-        function  edit(gid) {
+        function  edit(did) {
             $.ajax({
                 type: "POST",
-                url: "getGoodsByGid",
-                data: "gid=" + gid,
+                url: "getDoctorByDid",
+                data: "did=" + did,
                 dataType: "json",//声明返回数据格式是json
                 success: function (good) {
                     alert(good)
 
-                    $("#updategid").val(good.gid);
-                    $("#updategname").val(good.gname);
+                    $("#updatedid").val(good.did);
+                    $("#updatedname").val(good.dname);
 
-                    $("#updategprice").val(good.gprice);
-                    $("#updatecid").val(good.cid);
+                    $("#updatedphone").val(good.dphone);
+                    $("#dept3").val(good.deptid);
                     // alert(111)
                     // alert("返回数值为"+good)
-                    $("#updateGoods").modal("show");
+                    $("#updatedoctor").modal("show");
 
                 },
                 dateType: "json"
@@ -180,86 +241,210 @@
 
     </script>
 
+    <style type="text/css">
+
+        body {
+            /*background-color: #f5f5f5;*/
+            /*font-family: Arial, sans-serif;*/
+            line-height: 1.5;
+            /*color: #464646;*/
+        }
+
+        .tab-wrapper {
+            margin: 40px auto;
+            width: 90%;
+            max-width:1200px;
+        }
+        .tab-menu{
+
+        }
+        .tab-menu li {
+            position:relative;
+            background-color: #f5f5f5;
+            color:#bcbcbc;
+            display: inline-block;
+            padding: 20px 40px ;
+            opacity: 0.8;
+            cursor:pointer;
+            z-index:0;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .tab-menu li:hover {
+            color:#464646;
+        }
+
+        .tab-menu li.active {
+            color:#464646;
+            opacity: 1;
+        }
+
+        .tab-menu li.active:hover {
+            color:#464646;
+        }
+
+        .tab-content>div {
+            background-color: #fff;
+            box-sizing:border-box;
+            width: 100%;
+            padding: 60px;
+            min-height:200px;
+        }
+
+        .line {
+            position:absolute;
+            width: 0;
+            height: 7px;
+            background-color: aqua;
+            top: 0;
+            left: 0;
+        }
+
+
+
+    </style>
+
+    <script type="text/javascript" src="js/jq.tab.js"></script>
 </head>
 <body class="">
 <div class="container">
 
+    <div class="tab-wrapper">
 
-    <h3 align="center">医生管理</h3>
-    <p>
+        <ul class="tab-menu col-lg-12">
+            <li class="active col-xs-4 col-lg-offset-2">医生管理</li>
+            <li class="col-xs-4">职务管理</li>
+            <!--<li>tab #3</li>-->
+        </ul>
 
-    <form action="" id="search">
-        <div class="col-sm-2  ">
-            <input type="text" id="searchname" class=" form-control input-sm" placeholder="输入文字搜索">
-        </div>
-        <!--<div class="col-xs-2 ">-->
+        <div class="tab-content">
+            <div>
+                <p style="margin-top: 40px;">
 
-            <!--<select class="form-control" id="category3">-->
+                <form action="" id="search">
+                    <div class="col-sm-2  ">
 
-            <!--</select>-->
-        <!--</div>-->
-        <div class="col-xs-2">
-            <button class="btn btn-primary btn-xs " type="button" id="searchBtn">查 询</button>
-        </div>
-    </form>
+                        <input type="text" id="searchname" class=" form-control input-sm" placeholder="输入姓名搜索">
+                    </div>
+
+                    <div class="col-xs-2 ">
+                        <button class="btn btn-primary btn-sm " type="button" id="searchBtn">查 询</button>
+                    </div>
+                </form>
 
 
-    <button class="btn btn-primary btn-xm" data-toggle="modal" data-target="#adddoctor" >添加医生</button>
+                <!--<button class="btn btn-primary btn-sm" data-toggle="myModalLabel" data-target="#add">添加医生 </button>-->
+                <div class="col-xs-offset-6 col-lg-2">
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#add">
+                        添加医生
+                    </button>
+                </div>
 
-    </p>
 
-        <table class="table table-bordered" id="tab">
+                </p>
+                <table class="table table-bordered" id="tab" >
 
-        </table>
+                </table>
+
+            </div>
+            <div>
+
+                <table class="table table-bordered" id="tab2">
+
+                </table>
+            </div>
+            <!--<div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis, ad esse. Hic at officiis fuga mollitia quod.</div>-->
+        </div><!-- //tab-content -->
+
+    </div><!-- //tab-wrapper -->
+
+
+
+
+
 </div>
+
+
+
 
 
 <!--添加-->
 
-<div class="modal fade" id="adddoctor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">添加</h4>
+                <h4 class="modal-title" id="addd">添加</h4>
             </div>
             <div class="modal-body">
 
                 <form class="form-horizontal"  id="addform">
                     <div class="form-group ">
-                        <label class="col-xs-4 control-label">商品名称:</label>
-                        <div class="col-xs-4 ">
-                            <input type="text" class="form-control input-sm duiqi" name="gname">
+                        <label class="col-xs-4 control-label">姓名:</label>
+                        <div class="col-xs-6 ">
+                            <input type="text" class="form-control input-sm duiqi" name="dname" placeholder="输入姓名">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label  class="col-xs-4 control-label">商品价格:</label>
-                        <div class="col-xs-4">
-                            <input type="text" class="form-control input-sm duiqi" name="gprice">
+                        <label  class="col-xs-4 control-label">科室:</label>
+                        <div class="col-xs-6">
+
+                            <select  class="form-control"  name="deptid" id="dept">
+
+                            </select>
+
+                            <!--<input type="text" class="form-control input-sm duiqi" name="deptid">-->
                         </div>
                     </div>
                     <div class="form-group">
 
 
-                        <label class="col-xs-4 control-label">商品种类:</label>
-                        <div class="col-xs-4">
+                        <label class="col-xs-4 control-label">级别:</label>
+                        <div class="col-xs-6">
 
                             <!--<%&#45;&#45;<input type="text" class="form-control input-sm duiqi" name="cname">&#45;&#45;%>-->
 
-                            <select class="form-control" name="cid" id="category" >
+                            <select class="form-control" name="deptid" id="dept2" >
 
 
-                                <!--<c:forEach items="${categoryList}" var="category">-->
-                                <!--<option value="${category.cid}">${category.cname}</option>-->
-                                <!--</c:forEach>-->
+
 
                             </select>
                         </div>
 
                     </div>
-                    <!--<button type="button" class="btn btn-xs btn-green" id="addbtn">添加</button>-->
 
+
+                    <div class="form-group">
+                        <label  class="col-xs-4 control-label">手机号:</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control input-sm duiqi" name="dphone" maxlength="11"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" placeholder="输入11位的号码" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-xs-4 control-label">年龄:</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control input-sm duiqi" name="dage" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" placeholder="输入年龄">
+                        </div>
+                    </div>
+                    <!--<button type="button" class="btn btn-xs btn-green" id="addbtn">添加</button>-->
+                    <div class="form-group">
+                        <label  class="col-xs-4 control-label">职务:</label>
+                        <div class="col-xs-7">
+                            <input type="radio"  name="postname" value="2"> 医生
+                            <input type="radio"  name="postname"> 护士
+                            <input type="radio"  name="postname"> 挂号员
+                            <input type="radio"  name="postname"> 收费员
+                            <input type="radio"  name="postname"> 发药员
+
+                            <input type="radio"  name="postname"> 财务
+                            <input type="radio"  name="postname"> 其他人员
+
+                        </div>
+                    </div>
                 </form>
 
             </div>
@@ -281,35 +466,88 @@
             </div>
             <div class="modal-body">
 
+
                 <form class="form-horizontal"  id="updateform">
                     <div class="form-group ">
-                        <label class="col-xs-4 control-label">商品名称:</label>
-                        <div class="col-xs-4 ">
-                            <input type="hidden" id="updategid" name="gid">
-                            <input type="text" id="updategname" class="form-control input-sm duiqi" name="gname">
+                        <label class="col-xs-4 control-label">姓名:</label>
+                        <div class="col-xs-6 ">
+                            <input type="text" class="form-control input-sm duiqi" name="dname" placeholder="输入姓名" id="updatedname">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label  class="col-xs-4 control-label">手机号:</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control input-sm duiqi" name="dphone" maxlength="11" id="updatedphone"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" placeholder="输入11位的号码" >
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label  class="col-xs-4 control-label">商品价格:</label>
-                        <div class="col-xs-4">
-                            <input type="text" id="updategprice" class="form-control input-sm duiqi" name="gprice">
+                        <label  class="col-xs-4 control-label">科室:</label>
+                        <div class="col-xs-6">
+
+                            <select  class="form-control"  name="deptid" id="dept3">
+
+                            </select>
+
+                            <!--<input type="text" class="form-control input-sm duiqi" name="deptid">-->
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-xs-4 control-label">商品种类:</label>
-                        <div class="col-xs-4">
+
+
+                        <label class="col-xs-4 control-label">级别:</label>
+                        <div class="col-xs-6">
+
                             <!--<%&#45;&#45;<input type="text" class="form-control input-sm duiqi" name="cname">&#45;&#45;%>-->
 
-                            <select class="form-control" name="cid" id="category2" >
+                            <select class="form-control" name="deptid" id="dept4" >
 
-                                <!--<c:forEach items="${categoryList}" var="category">-->
-                                <!--<option value="${category.cid}">${category.cname}</option>-->
-                                <!--</c:forEach>-->
+
+
+
                             </select>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label  class="col-xs-4 control-label">年龄:</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control input-sm duiqi" name="dage" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" placeholder="输入年龄">
                         </div>
                     </div>
                     <!--<button type="button" class="btn btn-xs btn-green" id="addbtn">添加</button>-->
+                    <div class="form-group">
+                        <label  class="col-xs-4 control-label">职务:</label>
+                        <div class="col-xs-7">
+                            <input type="radio"  name="postname" value="2"> 医生
+                            <input type="radio"  name="postname"> 护士
+                            <input type="radio"  name="postname"> 挂号员
+                            <input type="radio"  name="postname"> 收费员
+                            <input type="radio"  name="postname"> 发药员
+
+                            <input type="radio"  name="postname"> 财务
+                            <input type="radio"  name="postname"> 其他人员
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label  class="col-xs-4 control-label">医生擅长:</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control input-sm duiqi" name="dstrong"  placeholder="请输入医生擅长" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-xs-4 control-label">医生介绍:</label>
+                        <div class="col-xs-6">
+                            <input type="text" class="form-control input-sm duiqi" name="introduction"  placeholder="请输入医生擅长" >
+                        </div>
+                    </div>
                 </form>
 
             </div>
@@ -320,6 +558,11 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
+
+
+
+
+
 
 </body>
 </html>
