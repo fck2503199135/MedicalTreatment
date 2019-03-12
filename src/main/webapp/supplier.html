@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/js/bootstrap-table.min.css" rel="stylesheet">
+    <script src="jq/jquery-3.2.0.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+
+    <script language="JavaScript">
+        $(function () {
+
+            $("#table").bootstrapTable({
+                url: "getByNameAndName",         //请求后台的URL（*）
+                method: "post",                      //请求方式（*）
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                queryParams: queryParams,            //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 10,                       //每页的记录行数（*）
+                columns: [
+                    {
+                        field: 'sid',
+                        title: '供应商标号',
+                        align: 'center',
+                    }, {
+                        field: 'sname',
+                        title: '供应商名称',
+                        align: 'center',
+                    }, {
+                        field: 'saddress',
+                        title: '供应商地址',
+                        align: 'center',
+                    }, {
+                        field: 'speoname',
+                        title: '联系人',
+                        align: 'center',
+                    }, {
+                        field: 'slandline',
+                        title: '座机',
+                        align: 'center',
+                    }, {
+                        field: 'smphone',
+                        title: '手机',
+                        align: 'center',
+                    }, {
+                        field: 'sbank',
+                        title: '银行账号',
+                        align: 'center',
+                    }, {
+                        field: 'sdate',
+                        title: '创建日期',
+                        align: 'center',
+                    }, {
+                        field: 'sid',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+
+                            return '<button class="btn btn-warning btn-xs" onclick=" updateSupplier(' + value + ')">修改</button><button class="btn btn-danger btn-xs" onclick=" delSupplier(' + value + ')">删除</button>'
+                        }
+                    }]
+            })
+
+
+            $("#addsubmitBtn").click(function () {
+
+                var d = new Date();
+                var sdate = d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日 "
+                var serialize = $("#addSupplierfrom").serialize();
+                $.ajax({
+                    type: "post",
+                    url: "addSupplier?sdate=" + sdate,
+                    datatype: "json",
+                    data: serialize,
+                    success: function (data) {
+                        $("#table").bootstrapTable("refresh");
+                        $("#addSupplier").modal("hide")
+                        $("#sname").val("")
+                        $("#saddress").val("")
+                        $("#speoname").val("")
+                        $("#slandline").val("")
+                        $("#smphone").val("")
+                        $("#sbank").val("")
+                    }
+                })
+            })
+
+
+
+
+            $("#updatesubmitBtn").click(function () {
+                var serialize = $("#updateSupplierform").serialize();
+                $.ajax({
+                    type: "post",
+                    url: "updateSupplier",
+                    data: serialize,
+                    success: function (data) {
+                        $("#table").bootstrapTable("refresh");
+                        $("#updateSupplier").modal("hide")
+                    }
+                })
+            })
+
+
+        });
+
+
+        function queryParams(params) {
+            return {
+                limit: params.limit,
+                offset: params.offset,
+                "name": $("#name").val()
+
+            }
+        }
+
+        function getByNameAndName() {
+            $("#table").bootstrapTable("refresh");
+        }
+
+        function reg() {
+            $("#name").val("")
+        }
+
+        function addSupplier() {
+            $("#addSupplier").modal("show")
+        }
+
+
+        function delSupplier(sid) {
+
+            if (confirm("是否删除?")) {
+                $.ajax({
+                    type: "post",
+                    url: "delSupplier?sid=" + sid,
+                    datatype: "json",
+                    success: function (data) {
+                        $("#table").bootstrapTable("refresh");
+                    }
+                })
+            } else {
+                alert("已取消！")
+            }
+
+
+        }
+
+
+        function updateSupplier(sid) {
+            $.ajax({
+                type: "post",
+                url: "getById?sid=" + sid,
+                datatype: "json",
+                success: function (data) {
+                    $("#sid").val(data.sid);
+                    $("#sname1").val(data.sname);
+                    $("#saddress1").val(data.saddress);
+                    $("#speoname1").val(data.speoname);
+                    $("#slandline1").val(data.slandline);
+                    $("#smphone1").val(data.smphone);
+                    $("#sbank1").val(data.sbank);
+                    $("#updateSupplier").modal("show")
+
+                }
+            })
+
+        }
+
+
+    </script>
+
+
+    <meta charset="UTF-8">
+    <title>供应商维护</title>
+</head>
+<body>
+
+<!--添加-->
+<div class="modal fade" id="addSupplier" tabindex="-1" role="dialog" aria-labelledby="addSupplierModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="addSupplierModalLabel">添加供应商信息</h4>
+            </div>
+
+            <form class="form-horizontal" role="form" id="addSupplierfrom" enctype="multipart/form-data">
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="sname" class="col-sm-4 control-label">供应商名称</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="sname" name="sname" placeholder="请输入名称">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="saddress" class="col-sm-4 control-label">供应商地址</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="saddress" name="saddress" placeholder="请输入地址">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="speoname" class="col-sm-4 control-label">联系人姓名</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="speoname" name="speoname" placeholder="请输入姓名">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="slandline" class="col-sm-4 control-label">座机号</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="slandline" name="slandline"
+                                   placeholder="请输入 例:010+65528101 的11位数字" maxlength="11"
+                                   oninput="value=value.replace(/[^\d]/g,'')">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="smphone" class="col-sm-4 control-label">手机号</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="smphone" name="smphone"
+                                   placeholder="请输入 数字为11位手机号" maxlength="11"
+                                   oninput="value=value.replace(/[^\d]/g,'')">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="sbank" class="col-sm-4 control-label">银行账号</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="sbank" name="sbank" placeholder="请输入账号">
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="addsubmitBtn" class="btn btn-primary">提交</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<!--修改-->
+<div class="modal fade" id="updateSupplier" tabindex="-1" role="dialog" aria-labelledby="updateSupplierModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" id="updateSupplierModalLabel">修改供应商信息</h4>
+            </div>
+
+            <form class="form-horizontal" role="form" id="updateSupplierform">
+                <input type="hidden" id="sid" name="sid">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="sname1" class="col-sm-4 control-label">供应商名称</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="sname1" name="sname">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="saddress1" class="col-sm-4 control-label">供应商地址</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="saddress1" name="saddress">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="speoname1" class="col-sm-4 control-label">联系人姓名</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="speoname1" name="speoname">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="slandline1" class="col-sm-4 control-label">座机号</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="slandline1" name="slandline" maxlength="11"
+                                   oninput="value=value.replace(/[^\d]/g,'')">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="smphone1" class="col-sm-4 control-label">手机号</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="smphone1" name="smphone" maxlength="11"
+                                   oninput="value=value.replace(/[^\d]/g,'')">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="sbank1" class="col-sm-4 control-label">银行账号</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="sbank1" name="sbank">
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" id="updatesubmitBtn" class="btn btn-primary">保存修改</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--查询-->
+<div class="container" style="margin-top: 50px">
+
+    <div class="col-sm-10">
+
+        <form class="form-horizontal" role="form">
+
+            <div class="container">
+
+                <div class="form-group col-sm-4">
+                    <label for="name" class="col-sm-6 control-label">供应商/联系人</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" placeholder="请输入名称">
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-4">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" onclick="getByNameAndName()" class="btn btn-info">查询</button>
+                        <button type="button" onclick="reg()" class="btn btn-warning">重置</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+
+
+    </div>
+
+    <div class="col-sm-2">
+        <button type="button" onclick="addSupplier()" class="btn btn-primary">添加供应商</button>
+    </div>
+
+</div>
+
+
+<div class="container">
+    <table border="1" id="table" class="table table-striped table-bordered table-hover"></table>
+</div>
+
+</body>
+</html>

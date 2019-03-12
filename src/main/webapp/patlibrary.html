@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/js/bootstrap-table.min.css" rel="stylesheet">
+    <link href="jq/style.css" rel="stylesheet">
+    <link href="bootstrap/js/bootstrap-table.min.css" rel="stylesheet">
+    <script src="jq/jquery-3.2.0.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="jq/index.js"></script>
+
+    <script language="JavaScript">
+        $(function () {
+
+            $("#table").bootstrapTable({
+                url: "getAllRec",         //请求后台的URL（*）
+                method: "post",                      //请求方式（*）
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                singleSelect: true,
+                queryParams: queryParams,            //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 5,                       //每页的记录行数（*）
+                columns: [
+                    {
+                        field: 'recid',
+                        title: '编号',
+                        align: 'center'
+                    }, {
+                        field: 'mname',
+                        title: '药品名称',
+                        align: 'center'
+                    }, {
+                        field: 'mspec',
+                        title: '单.剂量(g/条)',
+                        align: 'center'
+                    }, {
+                        field: 'recdec',
+                        title: '特殊要求',
+                        align: 'center'
+                    }]
+            });
+
+
+            getData();
+
+        });
+
+        function queryParams(param) {
+            return {
+                limit: param.limit,
+                offset: param.offset
+            }
+        }
+
+
+        function updatePat() {
+            var serialize = $("#patfrom").serialize();
+            $.ajax({
+                type: "post",
+                url: "updatePat",
+                datatype: "json",
+                data: serialize,
+                success: function (data) {
+                    alert("修改信息保存成功！");
+                    window.location.reload();
+                }
+            })
+        }
+
+        function getData() {
+            var url = decodeURI(window.location.href);
+            var patids = url.split("?patid=");
+            var patid = patids[1];
+            getPatById(patid);
+        }
+
+        function getPatById(patid) {
+            $.ajax({
+                type: "post",
+                url: "getPatById?patid=" + patid,
+                datatype: "json",
+                success: function (data) {
+                    $("#patid").val(data.patid);
+                    $("#patname").val(data.patname);
+                    $("#patage").val(data.patage);
+                    $("#patsex").val(data.patsex);
+                    $("#patphone").val(data.patphone);
+                    $("#pataddress").val(data.pataddress);
+                    $("#patconcatname").val(data.patconcatname);
+                    $("#patconcatphone").val(data.patconcatphone);
+                    $("#patconcatrelation").val(data.patconcatrelation);
+                    $("#patallergy").val(data.patallergy);
+                    $("#patnum").val(data.patnum);
+                    $("#patblood").val(data.patblood);
+                    $("#patleftlisten").val(data.patleftlisten);
+                    $("#patrightlisten").val(data.patrightlisten);
+                    $("#patleftview").val(data.patleftview);
+                    $("#patrightview").val(data.patrightview);
+                    $("#pathigh").val(data.pathigh);
+                    $("#patwight").val(data.patwight);
+                    $("#patsickdate").val(data.patsickdate);
+                    $("#patdiatype").val(data.str_patdiatype);
+                    $("#patinf").val(data.str_patinf);
+                    $("#patdoctchief").val(data.patdoctchief);
+                    $("#patdoctdet").val(data.patdoctdet);
+                    $("#patdoctadce").val(data.patdoctadce);
+                }
+            })
+
+        }
+
+    </script>
+
+    <meta charset="UTF-8">
+    <title>患者库</title>
+</head>
+<body>
+
+
+<form class="form-horizontal" role="form" id="patfrom">
+    <input type="hidden" id="patid" name="patid">
+
+    <div class="tab-wrapper">
+        <div class="col-sm-offset-8">
+            <div class="form-group">
+                <a href="patient.html">
+                    <button class="btn btn-sm" type="button">返回</button>
+                </a>
+                <button class="btn btn-sm btn-primary" type="button" onclick="updatePat()">保存</button>
+            </div>
+        </div>
+
+        <ul class="tab-menu col-sm-offset-3">
+
+            <li class="active">患者档案</li>
+            <li>历史病历</li>
+        </ul>
+
+        <div class="tab-content">
+
+            <!--患者档案-->
+            <div>
+
+                <div class="container">
+
+
+                    <div class="form-group" style="margin-top: 50px">
+
+
+                        <div class="col-sm-4">
+
+
+                            <div class="form-group">
+                                <label for="patname" class="col-sm-3 control-label">患者名字</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="patname" name="patname">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="patsex" class="col-sm-3 control-label">患者性别</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" id="patsex" name="patsex">
+                                        <option value="0">男</option>
+                                        <option value="1">女</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="patage" class="col-sm-3 control-label">患者年龄</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="patage" name="patage">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group" style="margin-top: 50px">
+                                <label for="patconcatname" class="col-sm-4 control-label">紧急联系人</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="patconcatname" name="patconcatname">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="patconcatrelation" class="col-sm-4 control-label">联系人关系</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="patconcatrelation"
+                                           name="patconcatrelation">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="patconcatphone" class="col-sm-4 control-label">联系人电话</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="patconcatphone" name="patconcatphone"
+                                           maxlength="11" oninput="value=value.replace(/[^\d]/g,'')">
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="col-sm-4">
+
+
+                            <div class="form-group">
+                                <label for="patphone" class="col-sm-3 control-label">患者电话</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="patphone" name="patphone" maxlength="11"
+                                           oninput="value=value.replace(/[^\d]/g,'')">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="patnum" class="col-sm-3 control-label">身份证号</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="patnum" name="patnum" maxlength="18"
+                                           onblur="value=value.replace(/^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/)">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group" style="margin-top: 50px">
+                                <label for="pataddress" class="col-sm-3 control-label">患者住址</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="pataddress" name="pataddress">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="patblood" class="col-sm-3 control-label">患者血型</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="patblood" name="patblood">
+                                        <option value="0">A型血</option>
+                                        <option value="1">B型血</option>
+                                        <option value="2">AB型血</option>
+                                        <option value="3">O型血</option>
+                                        <option value="4">其他</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="col-sm-4">
+
+
+                            <div class="form-group">
+                                <label for="pathigh" class="col-sm-3 control-label">身高(厘米)</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="pathigh" name="pathigh" maxlength="3">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="patwight" class="col-sm-3 control-label">体重(斤)</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="patwight" name="patwight" maxlength="3">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group" style="margin-top: 50px">
+                                <label for="patleftlisten" class="col-sm-3 control-label">左耳听力</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="patleftlisten" name="patleftlisten">
+                                        <option value="0">正常</option>
+                                        <option value="1">缺陷</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="patrightlisten" class="col-sm-3 control-label">右耳听力</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="patrightlisten" name="patrightlisten">
+                                        <option value="0">正常</option>
+                                        <option value="1">缺陷</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="patleftview" class="col-sm-3 control-label">左眼视力</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="patleftview" name="patleftview">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="patrightview" class="col-sm-3 control-label">右眼视力</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="patrightview" name="patrightview">
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group" style="margin-top: 50px">
+                        <label class="col-sm-1 control-label">过敏史:</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="4" id="patallergy" name="patallergy"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 50px">
+                        <label class="col-sm-1 control-label">个人史:</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="4" id="patself" name="patself"></textarea>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" style="margin-top: 50px">
+                        <label class="col-sm-1 control-label">家族史:</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="4" id="patfamily" name="patfamily"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!--历史病历-->
+            <div>
+
+                <div class="container">
+
+                    <div class="col-sm-4">
+
+
+                    </div>
+
+
+                    <div class="col-sm-8">
+
+
+                        <div class="form-group">
+
+                            <div class="col-sm-4">
+                                <label for="patsickdate" class="col-sm-5 control-label">发病日期</label>
+                                <div class="col-sm-7">
+                                    <input type="text" readonly="readonly" class="form-control" id="patsickdate">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <label for="patdiatype" class="col-sm-6 control-label">诊断类型</label>
+                                <div class="col-sm-6">
+                                    <input type="text" readonly="readonly" class="form-control" id="patdiatype">
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-4">
+                                <label for="patinf" class="col-sm-6 control-label">是否传染</label>
+                                <div class="col-sm-6">
+                                    <input type="text" readonly="readonly" class="form-control" id="patinf">
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <div class="form-group" style="margin-top: 20px">
+                                <label class="col-sm-2 control-label">医生主诉:</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" rows="3" id="patdoctchief" readonly></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 20px">
+                                <label class="col-sm-2 control-label">诊断详情:</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" rows="3" id="patdoctdet" readonly></textarea>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group" style="margin-top: 20px">
+                                <label class="col-sm-2 control-label">医生建议:</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" rows="3" id="patdoctadce" readonly></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <div class="col-sm-12">
+                                <table border="1" id="table"
+                                       class="table table-striped table-bordered table-hover"></table>
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</form>
+
+
+</body>
+</html>

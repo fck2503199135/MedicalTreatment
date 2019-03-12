@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.fck.PatientMapper">
+
+    <resultMap id="patreg" type="patient">
+        <id column="patid" property="patid"></id>
+        <result column="patname" property="patname"></result>
+        <result column="patbirthday" property="patbirthday"></result>
+        <result column="patsex" property="patsex"></result>
+        <result column="patage" property="patage"></result>
+        <result column="pataddress" property="pataddress"></result>
+        <result column="patallergy" property="patallergy"></result>
+        <result column="patphone" property="patphone"></result>
+        <result column="patallergy" property="patallergy"></result>
+        <result column="patsickdate" property="patsickdate"></result>
+        <result column="patdiatype" property="patdiatype"></result>
+        <result column="patinf" property="patinf"></result>
+        <result column="patcontcatname" property="patcontcatname"></result>
+        <result column="patcontcatrelation" property="patcontcatrelation"></result>
+        <result column="patconcatphone" property="patconcatphone"></result>
+        <result column="patdoctchief" property="patdoctchief"></result>
+        <result column="patdoctdet" property="patdoctdet"></result>
+        <result column="pathigh" property="pathigh"></result>
+        <result column="patdoctadce" property="patdoctadce"></result>
+        <result column="patwight" property="patwight"></result>
+        <result column="patblood" property="patblood"></result>
+        <result column="patleftlisten" property="patleftlisten"></result>
+        <result column="patrightlisten" property="patrightlisten"></result>
+        <result column="patleftview" property="patleftview"></result>
+        <result column="patrightview" property="patrightview"></result>
+        <association property="registered" javaType="registered">
+            <id column="rid" property="rid"></id>
+            <result column="did" property="did"></result>
+            <result column="dname" property="dname"></result>
+            <result column="deptid" property="deptid"></result>
+            <result column="deptname" property="deptname"></result>
+            <result column="regid" property="regid"></result>
+            <result column="regname" property="regname"></result>
+            <result column="rpatregtime" property="rpatregtime"></result>
+            <result column="rpatdate" property="rpatdate"></result>
+            <result column="rpatregmoney" property="rpatregmoney"></result>
+        </association>
+    </resultMap>
+
+
+
+    <select id="getDoctor" resultType="registered">select did,dname from doctor</select>
+
+    <select id="getDept" resultType="registered">select deptid,deptname from dept</select>
+
+    <select id="getReg" resultType="registered">select regid,regname from register</select>
+
+    <insert id="addRegister" parameterType="registered">insert into registered(patname,patage,patsex,patphone,patbirthday,pataddress,deptid,did,regid,rpatregtime,rpatdate,rpatregmoney,regde) values (#{patname},#{patage},#{patsex},#{patphone},#{patbirthday},#{pataddress},#{deptid},#{did},#{regid},#{rpatregtime},#{rpatdate},10,0);</insert>
+
+    <select id="getPatientByReg" resultType="registered" parameterType="page">select rid,patname,patage,patphone,rpatregtime,rpatdate,rpatregmoney,deptname,dname,regname from dept,register,registered,doctor <where>registered.did=doctor.did and registered.deptid=dept.deptid and registered.regid=register.regid <if test="name!=null"> and patname like concat('%',#{name},'%')</if>limit #{offset},#{limit}</where></select>
+
+    <select id="getRegPeoById" parameterType="int" resultType="registered">select rid,patname,patsex,patage,patphone,pataddress from registered where rid =#{rid}</select>
+
+    <select id="getCount" resultType="int">select COUNT(1) FROM registered</select>
+
+    <select id="getPatPeo" resultType="patient" parameterType="page">select patid,patname,patsex,patage,patphone,pataddress,patnowtime from patient <where><if test="name!=null"> patname like concat('%',#{name},'%')</if><if test="patphone!=null">and patphone like concat('%',#{patphone},'%')</if></where>limit #{offset},#{limit}</select>
+
+    <select id="getPatCount" resultType="int">select COUNT(1) FROM patient</select>
+
+    <select id="getPatById" parameterType="int" resultType="patient">select * from patient where patid=#{patid}</select>
+
+    <select id="getRegisterByNo" parameterType="page" resultType="registered">select rid,patname,patage,patsex,patphone,rpatregtime,rpatdate,deptname,regname from dept,register,registered<where>registered.deptid=dept.deptid and registered.regid=register.regid and regde=0<if test="name != null"> and patname like concat('%',#{name},'%')</if><if test="sdate != ''"> and rpatregtime &gt;= #{sdate} and rpatregtime &lt; '2500-1-1'</if><if test="edate != ''"> and  rpatregtime &lt;= #{edate} and rpatregtime &gt; '1500-1-1'</if>limit #{offset},#{limit}</where></select>
+
+    <select id="getNoCount" resultType="int">select COUNT(1) FROM registered where regde=0</select>
+
+    <select id="getGoCount" resultType="int">select COUNT(1) FROM registered where regde=1</select>
+
+    <insert id="saveSetPat" parameterType="patient">insert into patient(patname,patage,patsex,patphone,pataddress,patallergy,patsickdate,patdiatype,patinf,patdoctchief,patdoctdet,patdoctadce) values (#{patname},#{patage},#{patsex},#{patphone},#{pataddress},#{patallergy},#{patsickdate},#{patdiatype},#{patinf},#{patdoctchief},#{patdoctdet},#{patdoctadce});</insert>
+
+    <update id="updateReg" parameterType="patient">update registered set regde = 1,regvisitdate=NOW() where rid=#{rid}</update>
+
+    <select id="getRegisterByGo" parameterType="page" resultType="registered">select rid,patname,patage,patsex,patphone,regvisitdate,regname from register,registered<where>registered.regid=register.regid and regde=1<if test="name != null"> and patname like concat('%',#{name},'%')</if><if test="sdate != ''"> and rpatregtime &gt;= #{sdate} and rpatregtime &lt; '2500-1-1'</if><if test="edate != ''"> and  rpatregtime &lt;= #{edate} and rpatregtime &gt; '1500-1-1'</if>limit #{offset},#{limit}</where></select>
+
+    <select id="getHisReg" parameterType="page" resultType="registered">select rid,patname,patage,patsex,patphone,regvisitdate,regname from register,registered<where>registered.regid=register.regid and regde=1<if test="byname != null"> and patname like concat('%',#{byname},'%')</if>limit #{offset},#{limit}</where></select>
+
+    <select id="getAllRegister" parameterType="page" resultType="registered">select rid,patname,patage,patphone,rpatregtime,rpatdate,rpatregmoney,deptname,dname,regname from dept,register,registered,doctor <where>registered.did=doctor.did and registered.deptid=dept.deptid and registered.regid=register.regid <if test="name!=null"> and patname like concat('%',#{name},'%')</if><if test="sdate != ''"> and rpatregtime &gt;= #{sdate} and rpatregtime &lt; '2500-1-1'</if><if test="edate != ''"> and  rpatregtime &lt;= #{edate} and rpatregtime &gt; '1500-1-1'</if>limit #{offset},#{limit}</where></select>
+
+    <update id="updatePat" parameterType="patient">update patient set patname=#{patname},patsex=#{patsex},patage=#{patage},patnum=#{patnum},pataddress=#{pataddress},patphone=#{patphone},patallergy=#{patallergy},patself=#{patself},patfamily=#{patfamily},patconcatname=#{patconcatname},patconcatrelation=#{patconcatrelation},patconcatphone=#{patconcatphone},pathigh=#{pathigh},patwight=#{patwight},patblood=#{patblood},patleftlisten=#{patleftlisten},patrightlisten=#{patrightlisten},patleftview=#{patleftview},patrightview=#{patrightview},patnowtime=NOW() where patid=#{patid}</update>
+
+    <delete id="delpat" parameterType="int">delete from patient where patid=#{patid}</delete>
+
+
+
+</mapper>

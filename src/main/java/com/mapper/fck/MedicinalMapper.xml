@@ -9,19 +9,35 @@
         <id column="mid" property="mid"></id>
         <result column="mname" property="mname"></result>
         <result column="mcount" property="mcount"></result>
+        <result column="mweight" property="mweight"></result>
         <result column="mspec" property="mspec"></result>
         <result column="mfactory" property="mfactory"></result>
         <result column="mdate" property="mdate"></result>
-        <association property="type" javaType="mtype">
+        <association property="mtype" javaType="mtype">
             <id column="tid" property="tid"></id>
             <result column="tname" property="tname"></result>
+        </association>
+        <association property="supplier" javaType="supplier">
+            <id column="sid" property="sid"></id>
+            <result column="sname" property="sname"></result>
         </association>
     </resultMap>
 
 
-    <sql id="medics">mid,mname,mcout,mspec,mfactory,mdate,tname</sql>
+    <sql id="medics">mid,mname,mcount,mweight,mspec,sname,mdate,tname</sql>
 
-    <select id="getAll" resultMap="medic">select <include refid="medics"></include> from medicinal,mtype where medicinal.tid=mtype.tid</select>
+    <select id="getAllMedicinal" resultMap="medic">select <include refid="medics"></include> from medicinal,mtype,supplier where medicinal.tid=mtype.tid and medicinal.sid=supplier.sid and mjudge=1</select>
 
+    <select id="getByNameAndTid" resultMap="medic" parameterType="page">select <include refid="medics"></include> from medicinal,mtype,supplier <where> medicinal.tid=mtype.tid and medicinal.sid=supplier.sid<if test="tid != 0"> and medicinal.tid=#{tid}</if><if test="mname != null"> and mname like concat('%',#{mname},'%')</if><if test="mjudge==0"> and mjudge=0</if><if test="mjudge==1"> and mjudge=1</if> limit #{offset},#{limit}</where></select>
+
+    <select id="getCount" resultType="int" parameterType="page">select COUNT(1) FROM medicinal <where><if test="mjudge==0">mjudge=0</if><if test="mjudge==1">mjudge=1</if></where></select>
+
+    <select id="getMedicById" resultType="medicinal" parameterType="page">select mid,mname,mspec,mcount,moutprice from medicinal<where> mjudge=0 <if test="getname!=null"> and mname like concat('%',#{getname},'%')</if>limit #{offset},#{limit} </where></select>
+
+    <update id="updateMedic" parameterType="int">update medicinal set mjudge = 0 where mid = #{mid}</update>
+
+    <select id="getZeroCount" resultType="int">select COUNT(1) FROM medicinal where mjudge = 0</select>
+
+    <select id="addMedicinById" resultType="medicinal" parameterType="int">select mid,mname,mcount,moutprice from medicinal where mid=#{mid}</select>
 
 </mapper>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/js/bootstrap-table.min.css" rel="stylesheet">
+    <link href="css/fullcalendar.min.css" rel="stylesheet">
+    <link href="css/scheduler.min.css" rel="stylesheet">
+    <script src="js/moment.min.js"></script>
+    <script src="jq/jquery-3.2.0.min.js"></script>
+    <script src="js/fullcalendar.min.js"></script>
+    <script src="js/scheduler.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+
+
+    <script language="JavaScript">
+
+        $(function () {
+
+            $("#calendar").fullCalendar({
+                now: '2019-03-09',
+                editable: true, // enable draggable events
+                aspectRatio: 2,
+                scrollTime: '00:00', // undo default 6am scrollTime
+                schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+                header: {
+                    left: 'today prev,next',
+                    center: 'title',
+                    right: 'timelineDay,agendaWeek,month'
+                },
+                defaultView: 'timelineDay',
+                views: {
+                    agendaFourDay: {
+                        type: 'timeline',
+                        duration: { days: 4 },
+                        buttonText: '4 day'
+                    }
+                }
+
+            });
+
+            $("#calendar").fullCalendar( 'addEventSource', events);
+        });
+
+        function drawCalendar(data) {
+            $("#calendar").fullCalendar( 'removeEvents');
+            var events=[];
+            for(var i=0, len=data.length; i<len; i++){
+                var timeDate=data[i];
+                //如果非整天时间，则显示时分数据
+                var isallDay=true;
+                if(timeDate["end"] !=null && timeDate["start"] != null){
+                    if(moment(timeDate["start"].replace(" ","T")).format("HH:mm") !== "00:00" || moment(timeDate["end"].replace(" ","T")).format("HH:mm") !== "00:00"){
+                        isallDay = false;
+                    }
+                }
+                var item={
+                    title : timeDate["title"],
+                    start : timeDate["start"].replace(" ","T"),
+                    className : "event-bar",
+                    allDay :  isallDay,
+                    end : timeDate["end"]==null ? "" : timeDate["end"].replace(" ","T"),
+                    backgroundColor : getCalendarColor(timeDate["user"]),
+                    user : timeDate["user"],
+                    startTime : timeDate["startTime"],
+                    endTime : timeDate["endTime"]
+                };
+                events.push(item);
+            }
+            $("#calendar").fullCalendar( 'addEventSource', events );
+        }
+
+
+
+
+
+
+
+
+    </script>
+
+    <style type="text/css">
+
+
+    </style>
+
+
+
+    <meta charset="UTF-8">
+    <title>医生排班</title>
+
+
+</head>
+<body>
+
+<div id="calendar" class="container" style="margin-top: 100px">
+
+</div>
+
+
+
+</body>
+</html>

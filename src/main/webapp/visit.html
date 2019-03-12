@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/js/bootstrap-table.min.css" rel="stylesheet">
+    <link href="jq/style.css" rel="stylesheet">
+    <link href="bootstrap/js/bootstrap-table.min.css" rel="stylesheet">
+    <script src="jq/jquery-3.2.0.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="jq/index.js"></script>
+
+    <meta charset="UTF-8">
+    <title>就诊列表</title>
+
+    <script language="JavaScript">
+
+        $(function () {
+
+            $("#table").bootstrapTable({
+                url: "getRegisterByNo",         //请求后台的URL（*）
+                method: "post",                      //请求方式（*）
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                singleSelect: true,
+                queryParams: queryParams,            //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 10,                       //每页的记录行数（*）
+                columns: [
+                    {
+                        checkbox: true
+                    }, {
+                        field: 'rid',
+                        title: '序号',
+                        align: 'center'
+                    }, {
+                        field: 'patname',
+                        title: '患者名',
+                        align: 'center'
+                    }, {
+                        field: 'strsex',
+                        title: '性别',
+                        align: 'center'
+                    }, {
+                        field: 'patage',
+                        title: '年龄',
+                        align: 'center'
+                    }, {
+                        field: 'patphone',
+                        title: '手机号',
+                        align: 'center'
+                    }, {
+                        field: 'deptname',
+                        title: '科室',
+                        align: 'center'
+                    }, {
+                        field: 'rpatregtime',
+                        title: '挂号日期',
+                        align: 'center'
+                    }, {
+                        field: 'strdate',
+                        title: '选择时间',
+                        align: 'center'
+                    }, {
+                        field: 'regname',
+                        title: '挂号类型',
+                        align: 'center'
+                    }, {
+                        field: 'rid',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+
+                            return '<button class="btn btn-success btn-xs" type="button" onclick=" dovisit(' + value + ')">就诊</button><button class="btn btn-warning btn-xs" type="button" onclick=" outvisit(' + value + ')">退号</button><button class="btn btn-danger btn-xs" type="button" onclick=" delvisit(' + value + ')">作废</button>'
+                        }
+                    }]
+            });
+
+
+            $("#tab").bootstrapTable({
+                url: "getRegisterByGo",         //请求后台的URL（*）
+                method: "post",                      //请求方式（*）
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                queryParams: queryParams,            //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 10,                       //每页的记录行数（*）
+                columns: [
+                    {
+                        field: 'rid',
+                        title: '序号',
+                        align: 'center'
+                    }, {
+                        field: 'patname',
+                        title: '患者名',
+                        align: 'center'
+                    }, {
+                        field: 'strsex',
+                        title: '性别',
+                        align: 'center'
+                    }, {
+                        field: 'patage',
+                        title: '年龄',
+                        align: 'center'
+                    }, {
+                        field: 'patphone',
+                        title: '手机号',
+                        align: 'center'
+                    }, {
+                        field: 'regvisitdate',
+                        title: '就诊时间',
+                        align: 'center'
+                    }, {
+                        field: 'regname',
+                        title: '挂号类型',
+                        align: 'center'
+                    }, {
+                        field: 'rid',
+                        title: '支付状态',
+                        align: 'center'
+                    }]
+            })
+
+        })
+
+
+        function dovisit() {
+            //使用getSelections即可获得，row是json格式的数据
+            var row = $.map($("#table").bootstrapTable('getSelections'), function (row) {
+                return row;
+            });
+            var url = "treat.html?rid="+row[0].rid;
+            url = encodeURI(url);
+            window.location.href = url;
+        }
+
+
+        function queryParams(params) {
+            return {
+                limit: params.limit,
+                offset: params.offset,
+                "name": $("#name").val(),
+                "sdate": $("#sdate").val(),
+                "edate": $("#edate").val(),
+            }
+
+        }
+
+
+    </script>
+
+</head>
+<body>
+
+
+<div class="tab-wrapper container">
+
+    <ul class="tab-menu col-sm-offset-5">
+        <li class="active">未就诊</li>
+        <li>已就诊</li>
+    </ul>
+
+
+    <div class="container" style="margin-top: 50px">
+
+        <div class="col-sm-12">
+
+            <form class="form-horizontal" role="form">
+
+                <div class="container">
+                    <div>
+
+                        <div class="form-group col-sm-4">
+                            <label for="name" class="col-sm-4 control-label">患者姓名</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="请输入">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group col-sm-4">
+                            <label for="sdate" class="col-sm-4 control-label">时间/日期</label>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control" id="sdate" name="sdate">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control" id="edate" name="edate">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div class="form-group col-sm-4">
+
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" onclick="getReviewByAll()" class="btn btn-info">查询</button>
+                                <button type="button" onclick="rego()" class="btn btn-warning">重置</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+    <div class="tab-content">
+
+
+        <div>
+
+            <div class="container">
+
+                <table border="1" id="table" class="table table-striped table-bordered table-hover">
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <div>
+            <div class="container">
+
+                <table border="1" id="tab" class="table table-striped table-bordered table-hover">
+
+                </table>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+</html>

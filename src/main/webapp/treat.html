@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/js/bootstrap-table.min.css" rel="stylesheet">
+    <link href="jq/style.css" rel="stylesheet">
+    <link href="bootstrap/js/bootstrap-table.min.css" rel="stylesheet">
+    <script src="jq/jquery-3.2.0.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="jq/index.js"></script>
+
+
+    <script language="JavaScript">
+        $(function () {
+            $("#table").bootstrapTable({
+                url: "getRegPeo",         //请求后台的URL（*）
+                method: "post",                      //请求方式（*）
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                queryParams: queryParams,            //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 10,                       //每页的记录行数（*）
+                columns: [
+                    {
+                        field: 'rid',
+                        title: '挂号序号',
+                        align: 'center',
+                    }, {
+                        field: 'patname',
+                        title: '患者名',
+                        align: 'center',
+                    }, {
+                        field: 'patage',
+                        title: '年龄',
+                        align: 'center',
+                    }, {
+                        field: 'patphone',
+                        title: '手机号',
+                        align: 'center',
+                    }, {
+                        field: 'deptname',
+                        title: '科室',
+                        align: 'center',
+                    }, {
+                        field: 'rpatregtime',
+                        title: '挂号日期',
+                        align: 'center',
+                    }, {
+                        field: 'strdate',
+                        title: '选择时间',
+                        align: 'center',
+                    }, {
+                        field: 'regname',
+                        title: '挂号类型',
+                        align: 'center',
+                    }, {
+                        field: 'rid',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+
+                            return '<button class="btn btn-success btn-xs" type="button" onclick=" addReg(' + value + ')">添加</button>'
+                        }
+                    }]
+            })
+
+
+            $("#tables").bootstrapTable({
+                url: "getHisReg",         //请求后台的URL（*）
+                method: "post",                      //请求方式（*）
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                queryParams: queryParams,            //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 10,                       //每页的记录行数（*）
+                columns: [
+                    {
+                        field: 'rid',
+                        title: '序号',
+                        align: 'center'
+                    }, {
+                        field: 'patname',
+                        title: '患者名',
+                        align: 'center'
+                    }, {
+                        field: 'strsex',
+                        title: '性别',
+                        align: 'center'
+                    }, {
+                        field: 'patage',
+                        title: '年龄',
+                        align: 'center'
+                    }, {
+                        field: 'patphone',
+                        title: '手机号',
+                        align: 'center'
+                    }, {
+                        field: 'regvisitdate',
+                        title: '就诊时间',
+                        align: 'center'
+                    }, {
+                        field: 'regname',
+                        title: '挂号类型',
+                        align: 'center'
+                    }, {
+                        field: 'rid',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+
+                            return '<button class="btn btn-success btn-xs" type="button" onclick=" addReg(' + value + ')">添加</button>'
+                        }
+                    }]
+            })
+
+
+
+            $("#tab").bootstrapTable({
+                url: "getPatPeo",         //请求后台的URL（*）
+                method: "post",                      //请求方式（*）
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                queryParams: queryParams,            //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 10,                       //每页的记录行数（*）
+                columns: [
+                    {
+                        field: 'patid',
+                        title: '序号',
+                        align: 'center',
+                    }, {
+                        field: 'patname',
+                        title: '患者名',
+                        align: 'center',
+                    }, {
+                        field: 'strsex',
+                        title: '性别',
+                        align: 'center',
+                    }, {
+                        field: 'patage',
+                        title: '年龄',
+                        align: 'center',
+                    }, {
+                        field: 'patphone',
+                        title: '手机号',
+                        align: 'center',
+                    }, {
+                        field: 'pataddress',
+                        title: '住址',
+                        align: 'center',
+                    }, {
+                        field: 'patid',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+
+                            return '<button class="btn btn-success btn-xs" type="button" onclick=" addPat(' + value + ')">添加</button>'
+                        }
+                    }]
+            })
+
+
+            $("#ts").bootstrapTable({
+                url: "getIns",         //请求后台的URL（*）
+                method: "post",                      //请求方式（*）
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                queryParams: queryParams,            //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 10,                       //每页的记录行数（*）
+                columns: [
+                    {
+                        field: 'insid',
+                        title: '序号',
+                        align: 'center',
+                    }, {
+                        field: 'insname',
+                        title: '项目名',
+                        align: 'center',
+                    }, {
+                        field: 'iclass',
+                        title: '类别',
+                        align: 'center',
+                    }, {
+                        field: 'unitprice',
+                        title: '价格',
+                        align: 'center',
+                    },  {
+                        field: 'insid',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+
+                            return '<button class="btn btn-success btn-xs" type="button" onclick=" addIns(' + value + ')">添加</button>'
+                        }
+                    }]
+            })
+
+
+            $("#tabs").bootstrapTable({
+                url: "getMedicById",         //请求后台的URL（*）
+                method: "post",                      //请求方式（*）
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                queryParams: queryParams,            //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 10,                       //每页的记录行数（*）
+                columns: [
+                    {
+                        field: 'mid',
+                        title: '序号',
+                        align: 'center',
+                    }, {
+                        field: 'mname',
+                        title: '药品名',
+                        align: 'center',
+                    }, {
+                        field: 'mspec',
+                        title: '规格',
+                        align: 'center',
+                    }, {
+                        field: 'mcount',
+                        title: '库存',
+                        align: 'center',
+                    }, {
+                        field: 'moutprice',
+                        title: '单价',
+                        align: 'center',
+                    }, {
+                        field: 'mid',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+
+                            return '<button class="btn btn-success btn-xs" type="button" onclick=" addMedicin(' + value + ')">添加</button>'
+                        }
+                    }]
+            })
+
+            getData();
+
+
+        })
+
+
+        function getData() {
+            var url = decodeURI(window.location.href);
+            var rids = url .split("?rid=");
+            var rid = rids[1];
+            addReg(rid)
+
+        }
+
+
+        function getAddMedic() {
+            $("#getAddMedic").modal("show")
+        }
+
+        function getpatName() {
+            $("#tables").bootstrapTable("refresh");
+        }
+
+
+        function getByName() {
+            $("#ts").bootstrapTable("refresh");
+            $("#tabs").bootstrapTable("refresh");
+        }
+
+
+        function addPat(patid) {
+
+            $.ajax({
+                type: "post",
+                url: "addPatPeoById?rid=" + rid,
+                datatype: "json",
+                success: function (data) {
+                    $("#patname").val(data.patname);
+                    $("#patage").val(data.patage);
+                    $("#patsex").val(data.patsex);
+                    $("#patphone").val(data.patphone);
+                    $("#pataddress").val(data.pataddress);
+                    $("#getRegPeo").modal("hide")
+                }
+            })
+
+        }
+
+        function addMedicin(mid) {
+            $.ajax({
+                type: "post",
+                url: "addMedicinById?mid=" + mid,
+                datatype: "json",
+                success: function (data) {
+                    $("#t").append("<tr><td>" + data.mid + "</td><td>" + data.mname + "</td><td>" + data.mcount + "</td><td>" + data.moutprice + "</td><td>" + (data.mcount) * (data.moutprice) + "</td><td><input type='text'></td><td><button class='btn btn-danger' type='button' onclick='delt()'>删除</button></td></tr>")
+                    $("#getAddMedic").modal("hide")
+                }
+            })
+
+        }
+
+
+        function addReg(rid) {
+            $.ajax({
+                type: "post",
+                url: "getRegPeoById?rid=" + rid,
+                datatype: "json",
+                success: function (data) {
+                    $("#rid").val(data.rid);
+                    $("#patname").val(data.patname);
+                    $("#patage").val(data.patage);
+                    $("#patsex").val(data.patsex);
+                    $("#patphone").val(data.patphone);
+                    $("#pataddress").val(data.pataddress);
+                    $("#getRegPeo").modal("hide")
+                    $("#getHistory").modal("hide")
+                }
+            })
+
+        }
+
+
+        function getRegPeo() {
+
+            $("#getRegPeo").modal("show")
+
+        }
+
+        function saveSet() {
+            var serialize = $("#fdata").serialize();
+            $.ajax({
+                type: "post",
+                url: "saveSetPat",
+                datatype: "json",
+                data:serialize,
+                success: function (data) {
+                    alert("信息保存成功！")
+                    window.location.reload();
+
+                }
+            })
+
+
+        }
+
+
+        function getHistory() {
+            $("#getHistory").modal("show")
+        }
+
+
+        function queryParams(params) {
+            return {
+                limit: params.limit,
+                offset: params.offset,
+                "name": $("#name").val(),
+                "getname": $("#getname").val(),
+                "byname":$("#byname").val()
+                // "rid":0
+            }
+
+
+        }
+
+        function getRegName() {
+            $("#table").bootstrapTable("refresh");
+            $("#tab").bootstrapTable("refresh");
+        }
+
+
+    </script>
+
+    <meta charset="UTF-8">
+    <title>新开就诊</title>
+</head>
+<body>
+
+
+<div class="modal fade" id="getHistory" tabindex="-1" role="dialog" aria-labelledby="getHistoryModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" style="width: 1300px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="getHistoryModalLabel">选择患者</h4>
+            </div>
+
+            <form class="form-horizontal" role="form" id="getHistoryfrom" enctype="multipart/form-data">
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="name" class="col-sm-4 control-label">患者名称</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="byname" name="byname" placeholder="请输入名称">
+                        </div>
+
+                        <div class="col-sm-4">
+                            <button type="button" onclick="getpatName()" class="btn btn-primary">查询</button>
+                        </div>
+                    </div>
+
+                    <div class="container">
+
+                        <table border="1" id="tables" class="table table-striped table-bordered table-hover"></table>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="getAddMedic" tabindex="-1" role="dialog" aria-labelledby="getAddMedicModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" style="width: 1300px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="getAddMedicModalLabel">选择药品</h4>
+            </div>
+
+            <form class="form-horizontal" role="form" id="getAddMedicfrom" enctype="multipart/form-data">
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="name" class="col-sm-4 control-label">通过名称搜索</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="getname" name="getname" placeholder="请输入名称">
+                        </div>
+
+                        <div class="col-sm-4">
+                            <button type="button" onclick="getByName()" class="btn btn-primary">查询</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+
+                        <div class="tab-wrapper">
+
+                            <ul class="tab-menu">
+                                <li class="active">药品处方</li>
+                                <li>检查项目</li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div>
+
+                                    <div class="container">
+                                        <table border="1" id="tabs"
+                                               class="table table-striped table-bordered table-hover"></table>
+                                    </div>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="container">
+                                        <table border="1" id="ts"
+                                               class="table table-striped table-bordered table-hover"></table>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="getRegPeo" tabindex="-1" role="dialog" aria-labelledby="getRegPeoModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" style="width: 1300px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="getRegPeoModalLabel">选择患者</h4>
+            </div>
+
+            <form class="form-horizontal" role="form" id="getRegPeofrom" enctype="multipart/form-data">
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="name" class="col-sm-4 control-label">患者名称</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="请输入名称">
+                        </div>
+
+                        <div class="col-sm-4">
+                            <button type="button" onclick="getRegName()" class="btn btn-info">查询</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+
+                        <div class="tab-wrapper">
+
+                            <ul class="tab-menu">
+                                <li class="active">挂号患者</li>
+                                <li>患者库</li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div>
+
+                                    <div class="container">
+                                        <table border="1" id="table"
+                                               class="table table-striped table-bordered table-hover"></table>
+                                    </div>
+
+                                </div>
+
+                                <div>
+
+                                    <div class="container">
+                                        <table border="1" id="tab"
+                                               class="table table-striped table-bordered table-hover"></table>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+
+<!--<div class="tab-wrapper">-->
+
+<!--<ul class="tab-menu">-->
+<!--<li class="active"></li>-->
+<!--<li></li>-->
+<!--</ul>-->
+
+<!--<div class="tab-content">-->
+<!--<div></div>-->
+<!--<div></div>-->
+<!--</div>-->
+
+<!--</div>-->
+
+
+<div class="container" style="margin-top: 80px">
+
+
+    <div class="form-group col-sm-offset-1">
+
+        <button type="button" onclick="getHistory()" class="btn btn-sm btn-info">历史</button>
+
+
+        <button type="button" onclick="saveSet()" class="btn btn-sm btn-primary">保存</button>
+
+
+        <button type="button" onclick="getMoney()" class="btn btn-sm btn-warning">收费</button>
+
+    </div>
+
+
+</div>
+
+<div class="container">
+
+<form id="fdata" class="form-horizontal" role="form">
+    <input type="hidden" id="rid" name="rid">
+    <div class="col-sm-6">
+        <div class="col-xs-12">
+
+            <br><br><br><br><br><br>
+
+        </div>
+            <div class="form-group">
+                <label for="patname" class="col-sm-2 control-label">名字</label>
+                <button type="button" onclick="getRegPeo()" class="btn btn-info">选择</button>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="patname" name="patname" placeholder="请输入名字">
+                </div>
+                <div class="col-sm-2">
+                    <select class="form-control" id="patsex" name="patsex">
+                        <option value="0">男</option>
+                        <option value="1">女</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="patage" class="col-sm-2 control-label">*年龄</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="patage" name="patage" placeholder="请输入年龄">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="patphone" class="col-sm-2 control-label">手机号</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="patphone" name="patphone" placeholder="请输入手机号" maxlength="11" oninput="value=value.replace(/[^\d]/g,'')">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">住址:</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control" rows="2" id="pataddress" name="pataddress"></textarea>
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">过敏史:</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control" rows="4" id="patallergy" name="patallergy"></textarea>
+                </div>
+
+            </div>
+
+            <div class="form-group col-sm-10">
+
+                <br><br>
+
+            </div>
+
+            <div class="form-group">
+
+                <div class="tab-wrapper">
+
+                    <ul class="tab-menu">
+                        <li class="active">患者档案</li>
+                        <li>历史病历</li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div>
+
+
+
+
+                        </div>
+
+
+                        <div>
+
+
+
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+
+
+    </div>
+
+
+    <div class="col-sm-6">
+
+
+        <div class="tab-wrapper">
+
+            <ul class="tab-menu">
+                <li class="active">病历</li>
+                <li>处方</li>
+            </ul>
+
+            <div class="tab-content">
+
+                <!--病历-->
+                <div>
+
+
+
+                        <div class="form-group">
+                            <label for="patsickdate" class="col-sm-4 control-label">发病日期</label>
+                            <div class="col-sm-6">
+                                <input type="date" class="form-control" id="patsickdate" name="patsickdate">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="patdiatype" class="col-sm-4 control-label">诊断类型</label>
+                            <div class="col-sm-5">
+                                <select class="form-control" id="patdiatype" name="patdiatype">
+                                    <option value="0">初诊</option>
+                                    <option value="1">复诊</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="patinf" class="col-sm-4 control-label">是否传染</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" id="patinf" name="patinf">
+                                    <option value="0">是</option>
+                                    <option value="1">否</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">医生主诉:</label>
+                            <div class="form-group"></div>
+                            <div class="col-sm-12">
+                                <textarea class="form-control" rows="3" id="patdoctchief"
+                                          name="patdoctchief"></textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">诊断详情:</label>
+                            <div class="form-group"></div>
+                            <div class="col-sm-12">
+                                <textarea class="form-control" rows="4" id="patdoctdet" name="patdoctdet"></textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">医生建议:</label>
+                            <div class="form-group"></div>
+                            <div class="col-sm-12">
+                                <textarea class="form-control" rows="4" id="patdoctadce" name="patdoctadce"></textarea>
+                            </div>
+
+                        </div>
+
+
+                </div>
+
+
+                <!--处方-->
+                <div>
+                    <div class="col-sm-12">
+
+                        <table border="1" id="t" class="table table-striped table-bordered table-hover">
+                            <tr>
+                                <td>序号</td>
+                                <td>药品名称</td>
+                                <td>数量</td>
+                                <td>单价(元/g)</td>
+                                <td>金额</td>
+                                <td>特殊要求</td>
+                                <td>操作</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <button type="button" class="btn btn-primary col-sm-12" onclick="getAddMedic()">+添加处方</button>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</form>
+
+</div>
+
+</body>
+</html>

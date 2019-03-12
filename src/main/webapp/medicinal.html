@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/js/bootstrap-table.min.css" rel="stylesheet">
+    <script src="jq/jquery-3.2.0.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <style type="text/css">
+        td {
+            text-align: center;
+            vertical-align: middle
+        }
+
+        #addMedicinal {
+            left: 50%;
+            top: 45%;
+            transform: translate(-50%, -50%);
+            min-width: 80%;
+        }
+
+
+    </style>
+
+    <script language="JavaScript">
+
+        $(function () {
+
+            $("#table").bootstrapTable({
+                url: "getByNameAndTid",         //请求后台的URL（*）
+                method: "post",                      //请求方式（*）
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                queryParams: queryParams,            //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 10,                       //每页的记录行数（*）
+                columns: [
+                    {
+                        field: 'mid',
+                        title: '维护中的药品编号',
+                        align: 'center',
+                    }, {
+                        field: 'mname',
+                        title: '药品名称',
+                        align: 'center',
+                    }, {
+                        field: 'mtype.tname',
+                        title: '药品种类',
+                        align: 'center',
+                    }, {
+                        field: 'mcount',
+                        title: '药品数量',
+                        align: 'center',
+                    }, {
+                        field: 'mweight',
+                        title: '重量基数',
+                        align: 'center',
+                    }, {
+                        field: 'mspec',
+                        title: '药品规格',
+                        align: 'center',
+                    }, {
+                        field: 'supplier.sname',
+                        title: '供应商',
+                        align: 'center',
+                    }, {
+                        field: 'mdate',
+                        title: '创建日期',
+                        align: 'center',
+                    }, {
+                        field: 'mid',
+                        title: '操作',
+                        align: 'center',
+                        formatter: function (value, row, index) {
+
+                            return '<button class="btn btn-danger btn-xs" onclick=" delMedicinal(' + value + ')">删除</button>'
+                        }
+                    }]
+            })
+
+
+            $.ajax({
+                type: "post",
+                url: "getAllMtype",
+                dateType: "json",
+                success: function (data) {
+                    $("#tid").append("<option value='0'>请选择类别</option>");
+                    for (var i = 0; i < data.length; i++) {
+                        $("#tid").append("<option value=" + data[i].tid + ">" + data[i].tname + "</option>")
+                    }
+
+
+                }
+            })
+
+            $.ajax({
+                type: "post",
+                url: "getAllMtype",
+                dateType: "json",
+                success: function (data) {
+                    $("#tid1").append("<option value='0'>请选择类别</option>");
+                    for (var i = 0; i < data.length; i++) {
+                        $("#tid1").append("<option value=" + data[i].tid + ">" + data[i].tname + "</option>")
+                    }
+
+
+                }
+            })
+
+
+        })
+
+
+        function delMedicinal(mid) {
+            if (confirm("是否删除?")) {
+
+                $.ajax({
+                    type: "post",
+                    url: "updateMedic?mid=" + mid,
+                    dateType: "json",
+                    success: function (data) {
+
+                        $("#table").bootstrapTable("refresh");
+                        $("#tab").bootstrapTable("refresh");
+                    }
+
+                })
+
+            } else {
+                alert("已取消！")
+            }
+
+
+        }
+
+
+        function reget() {
+            $("#mname").val("")
+            $("#tid").val("0")
+            $("#mname1").val("")
+            $("#tid1").val("0")
+        }
+
+
+        function getByNameAndTid() {
+            $("#table").bootstrapTable("refresh");
+        }
+
+        function get() {
+            $("#tab").bootstrapTable("refresh");
+        }
+
+        function addMedicinal() {
+
+            $("#addMedicinal").modal("show")
+
+            $("#tab").bootstrapTable({
+                url: "addMedicinal",         //请求后台的URL（*）
+                method: "post",                      //请求方式（*）
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                queryParams: Params,            //传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageSize: 10,                       //每页的记录行数（*）
+                columns: [
+                    {
+                        title: '全选',
+                        checkbox: true
+                    }, {
+                        field: 'mid',
+                        title: '药品编号',
+                        align: 'center',
+                    }, {
+                        field: 'mname',
+                        title: '药品名称',
+                        align: 'center',
+                    }, {
+                        field: 'mtype.tname',
+                        title: '药品种类',
+                        align: 'center',
+                    }, {
+                        field: 'mcount',
+                        title: '药品数量',
+                        align: 'center',
+                    }, {
+                        field: 'mweight',
+                        title: '重量基数',
+                        align: 'center',
+                    }, {
+                        field: 'mspec',
+                        title: '药品规格',
+                        align: 'center',
+                    }, {
+                        field: 'supplier.sname',
+                        title: '供应商',
+                        align: 'center',
+                    }]
+            })
+
+            $("#tab").bootstrapTable("refresh");
+
+        }
+
+        function Params(param) {
+            return {
+                limit: param.limit,
+                offset: param.offset,
+                "mname": $("#mname1").val(),
+                "tid": $("#tid1").val(),
+                "mjudge": 0
+            }
+
+        }
+
+
+        function queryParams(params) {
+            return {
+                limit: params.limit,
+                offset: params.offset,
+                "mname": $("#mname").val(),
+                "tid": $("#tid").val(),
+                "mjudge": 1
+            }
+
+        }
+
+
+    </script>
+
+    <meta charset="UTF-8">
+    <title>药品进销存</title>
+</head>
+<body>
+
+<div class="modal fade" id="addMedicinal" tabindex="-1" role="dialog" aria-labelledby="addMedicinalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" style="width: auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" id="addMedicinalLabel">导入药品信息</h4>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+
+                    <div class="container">
+
+                        <div class="form-group col-sm-4">
+                            <label for="mname1" class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="mname1" placeholder="请输入名称">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group col-sm-2">
+
+                            <select class="form-control" id="tid1" name="tid1">
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group col-sm-6">
+                            <div class="col-sm-offset-2 col-sm-12">
+                                <button type="button" onclick="get()" class="btn btn-info">查询</button>
+                                <button type="button" onclick="reget()" class="btn btn-warning">重置</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" onclick="addmedic()" class="btn btn-primary">导入</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+
+                <div class="container">
+                    <table border="1" id="tab" class="table table-striped table-bordered table-hover"></table>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container" style="margin-top: 50px">
+
+    <div class="col-sm-10">
+
+        <form class="form-horizontal" role="form">
+
+            <div class="container">
+
+                <div class="form-group col-sm-4">
+                    <label for="mname" class="col-sm-2 control-label">名称</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="mname" placeholder="请输入名称">
+                    </div>
+                </div>
+
+
+                <div class="form-group col-sm-2">
+
+                    <select class="form-control" id="tid" name="tid">
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group col-sm-4">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" onclick="getByNameAndTid()" class="btn btn-info">查询</button>
+                        <button type="button" onclick="reget()" class="btn btn-warning">重置</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+
+
+    </div>
+
+    <div class="col-sm-2">
+        <button type="button" onclick="addMedicinal()" class="btn btn-primary">导入药品信息</button>
+    </div>
+
+</div>
+
+
+<div class="container">
+    <table border="1" id="table" class="table table-striped table-bordered table-hover"></table>
+</div>
+
+</body>
+</html>

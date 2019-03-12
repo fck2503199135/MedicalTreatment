@@ -20,7 +20,7 @@
     </bean>
 
 
-    <context:component-scan base-package="com.fck.myservice"></context:component-scan>
+    <context:component-scan base-package="com.myservice"></context:component-scan>
 
 
     <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sessionFactory">
@@ -28,12 +28,12 @@
         <property name="dataSource" ref="basicDataSource"></property>
         <!--加载mybatis核心文件-->
         <property name="configLocation" value="classpath:sqlMapperConfig.xml"></property>
-        <property name="typeAliasesPackage" value="com.fck.beans"></property>
+        <property name="typeAliasesPackage" value="com.beans"></property>
     </bean>
 
     <!--配置扫描mapper包-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" id="mapperScannerConfigurer">
-        <property name="basePackage" value="com.fck.mapper"></property>
+        <property name="basePackage" value="com.mapper"></property>
     </bean>
 
 
