@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.fck.SupplierMapper">
+
+    <select id="getByNameAndName" parameterType="page" resultType="supplier">select * from supplier <where><if test="name!=null"> and sname like concat('%',#{name},'%') or speoname like concat('%',#{name},'%')</if> limit #{offset},#{limit}</where></select>
+
+    <select id="getCount" resultType="int">select COUNT(1) FROM supplier</select>
+
+    <insert id="addSupplier" parameterType="supplier">insert into supplier(sname,saddress,speoname,slandline,smphone,sbank,sdate) values (#{sname},#{saddress},#{speoname},#{slandline},#{smphone},#{sbank},#{sdate})</insert>
+
+    <delete id="delSupplier" parameterType="int">delete from supplier where sid = #{sid}</delete>
+
+    <update id="updateSupplier" parameterType="supplier">update supplier set sname=#{sname},saddress=#{saddress},speoname=#{speoname},slandline=#{slandline},smphone=#{smphone},sbank=#{sbank} where sid=#{sid}</update>
+
+    <select id="getById" parameterType="int" resultType="supplier">select * from supplier where sid=#{sid}</select>
+
+
+</mapper>
