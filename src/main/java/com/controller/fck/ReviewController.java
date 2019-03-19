@@ -65,7 +65,6 @@ public class ReviewController {
     @RequestMapping("/seeReview")
     @ResponseBody
     public Purchase seeReview(Page page){
-        System.out.println(rs.seeReview(page));
        return rs.seeReview(page);
     }
 
