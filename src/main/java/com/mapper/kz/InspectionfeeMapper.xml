@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.kz.InspectionfeeMapper">
+
+
+
+
+
+    <!--项目检测费-->
+
+    <select id="getAllInspection" resultType="inspectionfee" parameterType="pages">
+
+        select * from inspectionfee limit #{offset},#{limit};
+
+    </select>
+
+    <select id="getinsCount" resultType="int" >
+        select count(1) from inspectionfee
+    </select>
+
+    <!--添加项目-->
+    <insert id="addInspection" parameterType="inspectionfee">
+
+        insert into inspectionfee (insname,iclass,unitprice,cost,unit) values (#{insname},#{iclass},#{unitprice},#{cost},#{unit});
+    </insert>
+      <!--删除-->
+    <delete id="delInspection" parameterType="inspectionfee">
+        delete  from  inspectionfee where insid=#{insid}
+    </delete>
+
+    <select id="getInspectionById" resultType="inspectionfee" parameterType="inspectionfee">
+        select * from  inspectionfee where insid=#{insid}
+    </select>
+
+    <update id="updateInspection" parameterType="inspectionfee" >
+
+        update  inspectionfee set insname=#{insname},iclass=#{iclass},unitprice=#{unitprice},cost=#{cost},unit=#{unit} where insid=#{insid}
+    </update>
+
+
+    <!--<select id="getAllDept" resultType="dept" parameterType="page">-->
+        <!--select * from dept limit #{offset},#{limit};-->
+    <!--</select>-->
+
+    <!---->
+
+    <!--<select id="getdeptCount" resultType="int" >-->
+        <!--select count(1) from dept-->
+    <!--</select>-->
+
+
+    <!--<select id="getAllDeptByName" resultType="dept" parameterType="page">-->
+        <!--select * from dept where deptname like concat('%',#{deptname},'%') limit #{offset},#{limit};-->
+    <!--</select>-->
+
+    <!--<insert id="addDept" parameterType="dept">-->
+          <!--insert  into dept(deptname,dept_number) value (#{deptname},#{dept_number})-->
+    <!--</insert>-->
+
+    <!--<select id="getAllDepts" resultType="dept" parameterType="page">-->
+        <!--select dept.* from dept-->
+    <!--</select>-->
+
+    <!--<select id="getDeptByDeptid" resultType="dept" parameterType="dept">-->
+        <!--select * from  dept where deptid=#{deptid}-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash;删除&ndash;&gt;-->
+    <!--<delete id="delDept" parameterType="int">-->
+        <!--delete from dept where deptid=#{deptid}-->
+    <!--</delete>-->
+
+
+    <!--&lt;!&ndash;//修改编辑&ndash;&gt;-->
+    <!--<update id="updateDept" parameterType="dept" >-->
+          <!--update Dept set deptname=#{deptname},dept_number=#{dept_number} where deptid=#{deptid}-->
+    <!--</update>-->
+
+
+
+</mapper>

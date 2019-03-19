@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.kz.MMapper">
+
+
+    <!--&#45;&#45;         select did,dname,dsex=(case dsex when 0 then '女' when 1 then '男'),dage,dphone,deptid,postid from doctor,post,dept where doctor.postid=post.id and doctor.deptid=dept.deptid limit #{offset},#{limit}-->
+
+
+
+    <select id="getAllDoctor" resultType="doctor" parameterType="pages">
+
+    select  did,dname,dsex,dage,dphone,deptname,postname from doctor,post,dept where doctor.deptid=dept.deptid and doctor.postid=post.id and donline=1 limit #{offset},#{limit}
+
+
+    </select>
+
+    <select id="getCount" resultType="int" >
+        select count(1) from doctor where donline=1
+    </select>
+
+    <insert id="addDoctor" parameterType="doctor">
+          insert  into doctor(dname,dage,dsex,dphone,dstrong,introduction,deptid,donline) value (#{dname},#{dage},#{dsex},#{dphone},#{dstrong},#{introduction},#{deptid},#{donline})
+    </insert>
+
+    <select id="getDoctorByDid" resultType="doctor" parameterType="doctor">
+        select * from doctor where did=#{did}
+    </select>
+    
+    <select id="getDoctorByName" resultType="doctor" parameterType="pages">
+        select  did,dname,dsex,dage,dphone,deptname,postname from doctor,post,dept where doctor.deptid=dept.deptid and doctor.postid=post.id and dname like concat('%',#{dname},'%') and donline=1 limit #{offset},#{limit}
+    </select>
+
+    <update id="updateDoctor" parameterType="doctor" >
+          update doctor set dname=#{dname},dphone=#{dphone},deptid=#{deptid},dage=#{dage},postid=#{postid},dstrong=#{dstrong},introduction=#{introduction} where did=#{did}
+    </update>
+
+
+    <update id="prohibitDoctor" parameterType="doctor">
+          update doctor set donline=0 where did=#{did}
+    </update>
+
+    <!--relieveDoctor-->
+
+    <update id="relieveDoctor" parameterType="doctor">
+          update doctor set donline=1 where did=#{did}
+    </update>
+
+    <select id="getAllProhibit" resultType="doctor" parameterType="doctor">
+        select  * from doctor where donline=0
+    </select>
+
+
+
+
+    <!--挂号费   ========================================                -->
+
+    <select id="getAllRegfee" resultType="regfee" parameterType="pages">
+
+        select * from regfee where regname like concat('%',#{regname},'%') limit #{offset},#{limit};
+
+    </select>
+
+
+    <select id="getregfeeCount" resultType="int" >
+        select count(1) from regfee
+    </select>
+
+    <!--添加挂号费-->
+     <insert id="addRegfee" parameterType="regfee">
+          insert  into regfee(regname,regfee,numoffee_fee) value (#{regname},#{regfee},#{numoffee_fee})
+          
+    </insert>
+
+
+      <!--删除挂号费类型-->
+    <delete id="delRegfee" parameterType="regfee">
+    delete from regfee where regid=#{regid}
+    </delete>
+
+    <select id="getRegfeeByid" resultType="regfee">
+
+        select  * from regfee where regid=#{regid}
+    </select>
+
+        <!--修改挂号类型-->
+
+    <update id="updateRegfee" parameterType="regfee" >
+          update regfee set regname=#{regname},regfee=#{regfee},regfee_amount=#{regfee_amount};
+           where regid=#{regid}
+    </update>
+
+
+
+    <!--挂号费 结束  ========================================     -->
+
+
+
+    <!--处方附加费-->
+
+    <select id="getAllPrescription" resultType="prescription" parameterType="pages">
+
+        select * from prescription where prename like concat('%',#{prename},'%') limit #{offset},#{limit};
+
+    </select>
+
+    <select id="getpreCount" resultType="int" >
+        select count(1) from prescription
+    </select>
+
+    <!--添加处方附加-->
+    <insert id="addPrescription" parameterType="prescription">
+          insert into prescription(prename,fee,ptype) value (#{prename},#{fee},#{ptype})
+    </insert>
+
+
+    <!--删除处方附加-->
+    <delete id="delPrescription" parameterType="prescription">
+            delete  from  prescription where preid=#{preid}
+
+    </delete>
+
+
+    <select id="getPrescriptionByid" resultType="prescription">
+
+        select  * from prescription where preid=#{preid}
+    </select>
+
+
+      <!--修改处方附加费-->
+    <update id="updatePrescription" parameterType="prescription" >
+          update prescription set prename=#{prename},fee=#{fee},ptype=#{ptype}  where preid=#{preid}
+    </update>
+
+
+
+
+
+
+
+    <select id="getAllPost" resultType="post">
+        select * from post
+    </select>
+
+
+    <select id="getAllDictionary" resultType="dictionary">
+        select * from dictionary
+    </select>
+    <!--<sql id="medics">mid,mname,mcout,mspec,mfactory,mdate,tname</sql>-->
+    <!--<select id="getAll" resultMap="medic">select <include refid="medics"></include> from medicinal,mtype where medicinal.tid=mtype.tid</select>-->
+
+
+
+
+</mapper>

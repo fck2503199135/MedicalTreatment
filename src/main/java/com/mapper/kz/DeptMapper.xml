@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.kz.DeptMapper">
+
+
+    <select id="getAllDept" resultType="dept" parameterType="page">
+        select * from dept limit #{offset},#{limit};
+    </select>
+
+
+
+
+
+    <select id="getdeptCount" resultType="int" >
+        select count(1) from dept
+    </select>
+
+
+    <select id="getAllDeptByName" resultType="dept" parameterType="pages">
+        select * from dept where deptname like concat('%',#{deptname},'%') limit #{offset},#{limit};
+    </select>
+
+    <insert id="addDept" parameterType="dept">
+          insert  into dept(deptname,dept_number) value (#{deptname},#{dept_number})
+    </insert>
+
+    <select id="getAllDepts" resultType="dept" parameterType="pages">
+        select dept.* from dept
+    </select>
+
+    <select id="getDeptByDeptid" resultType="dept" parameterType="dept">
+        select * from  dept where deptid=#{deptid}
+    </select>
+
+    <!--删除-->
+    <delete id="delDept" parameterType="int">
+        delete from dept where deptid=#{deptid}
+    </delete>
+
+
+    <!--//修改编辑-->
+    <update id="updateDept" parameterType="dept" >
+          update Dept set deptname=#{deptname},dept_number=#{dept_number} where deptid=#{deptid}
+    </update>
+
+
+
+</mapper>
