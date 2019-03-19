@@ -40,4 +40,6 @@ public interface PatientService {
 
     void delpat(int patid);
 
+    List<Patient> getPatDid();
+
 }

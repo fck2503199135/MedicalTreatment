@@ -12,7 +12,7 @@ public interface ReviewMapper {
 
     List<Review> getReviewByAll(Page page);
 
-    int getCount();
+    int getCount(Page page);
 
     void delReview(int rid);
 
@@ -21,4 +21,8 @@ public interface ReviewMapper {
     void goReview(Purchase purchase);
 
     Purchase getPid(Purchase purchase);
+
+    Purchase seeReview(Page page);
+
+
 }

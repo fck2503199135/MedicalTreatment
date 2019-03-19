@@ -5,6 +5,6 @@
 
 <mapper namespace="com.mapper.fck.UserMapper">
 
-    <select id="loginUser" parameterType="user" resultType="string">select userpwd from user where username=#{username}</select>
+    <!--<select id="loginUser" parameterType="user" resultType="string">select userpwd from user where username=#{username}</select>-->
 
 </mapper>

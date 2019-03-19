@@ -17,5 +17,6 @@ public interface ReviewService {
 
     void goReview(Purchase purchase);
 
-    Purchase seeReview(Purchase purchase);
+    Purchase seeReview(Page page);
+
 }

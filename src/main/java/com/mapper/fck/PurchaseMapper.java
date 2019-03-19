@@ -8,7 +8,7 @@ public interface PurchaseMapper {
 
     List<Purchase> getAllPurchaseByName(Page page);
 
-    int getCount();
+    int getCount(Page page);
 
     List<Supplier> getSurIdName();
 

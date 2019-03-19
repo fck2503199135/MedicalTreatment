@@ -17,15 +17,25 @@ public class Page {
     private String edate; // 结束时间
     private int rstate; //判断字段
 
-    private int rid; //挂号序号
+    private int rid; //挂号序号 审核号
 
     private String getname; //通过药品与检查项目名
     private String byname;
 
     private String patphone; //患者手机号
 
+    private int[] pids;
+
     public Page() {
 
+    }
+
+    public int[] getPids() {
+        return pids;
+    }
+
+    public void setPids(int[] pids) {
+        this.pids = pids;
     }
 
     public String getPatphone() {

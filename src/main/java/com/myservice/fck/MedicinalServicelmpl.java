@@ -48,4 +48,22 @@ public class MedicinalServicelmpl implements MedicinalService{
     public Medicinal addMedicinById(int mid) {
         return medicinalMapper.addMedicinById(mid);
     }
+
+    @Override
+    public void editprice(Medicinal medicinal) {
+        medicinalMapper.editprice(medicinal);
+    }
+
+    @Override
+    public Map<String, Object> getAllMedPur(Page page) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("rows",medicinalMapper.getAllMedPur(page));
+        map.put("total",medicinalMapper.getPurCount());
+        return map;
+    }
+
+    @Override
+    public List<Medicinal> getMedData() {
+        return medicinalMapper.getMedData();
+    }
 }

@@ -2,103 +2,151 @@
 <html lang="en">
 <head>
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="bootstrap/js/bootstrap-table.min.css" rel="stylesheet">
     <link href="css/fullcalendar.min.css" rel="stylesheet">
     <link href="css/scheduler.min.css" rel="stylesheet">
     <script src="js/moment.min.js"></script>
     <script src="jq/jquery-3.2.0.min.js"></script>
     <script src="js/fullcalendar.min.js"></script>
     <script src="js/scheduler.min.js"></script>
+    <script src='js/locale-all.js'></script>
+    <script src='js/gcal.min.js'></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="bootstrap/js/bootstrap-table.min.js"></script>
-    <script src="bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
 
 
     <script language="JavaScript">
 
-        $(function () {
-
-            $("#calendar").fullCalendar({
-                now: '2019-03-09',
-                editable: true, // enable draggable events
-                aspectRatio: 2,
-                scrollTime: '00:00', // undo default 6am scrollTime
-                schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+        $(document).ready(function () {
+            //国际化默认值为'en'，代表使用英文
+            var initialLangCode = 'en';
+            //初始化FullCalendar
+            $('#calendar').fullCalendar({
+                //月视图下日历格子宽度和高度的比例
+                aspectRatio: 1.35,
+                //月视图的显示模式，fixed：固定显示6周高；liquid：高度随周数变化；variable: 高度固定
+                weekMode: 'liquid',
+                //初始化时的默认视图，month、agendaWeek、agendaDay
+                defaultView: 'month',
+                //agenda视图下是否显示all-day
+                allDaySlot: true,
+                //agenda视图下all-day的显示文本
+                allDayText: '全天',
+                //agenda视图下两个相邻时间之间的间隔
+                slotMinutes: 30,
+                //区分工作时间
+                businessHours: true,
+                //非all-day时，如果没有指定结束时间，默认执行120分钟
+                defaultEventMinutes: 120,
+                //设置为true时，如果数据过多超过日历格子显示的高度时，多出去的数据不会将格子挤开，而是显示为 +...more ，点击后才会完整显示所有的数据
+                eventLimit: true,
+                //设置头部信息，如果不想显示，可以设置header为false
                 header: {
-                    left: 'today prev,next',
+                    //日历头部左边：初始化切换按钮
+                    left: 'prev,next today',
+                    //日历头部中间：显示当前日期信息
                     center: 'title',
-                    right: 'timelineDay,agendaWeek,month'
+                    //日历头部右边：初始化视图
+                    right: 'month,agendaWeek,agendaDay'
                 },
-                defaultView: 'timelineDay',
-                views: {
-                    agendaFourDay: {
-                        type: 'timeline',
-                        duration: { days: 4 },
-                        buttonText: '4 day'
-                    }
-                }
-
+                //设置是否显示周六和周日，设为false则不显示
+                weekends: true,
+                //日历初始化时显示的日期，月视图显示该月，周视图显示该周，日视图显示该天，和当前日期没有关系
+                defaultDate: '2019-03-12',
+                //日程数据
+                events: [
+                    {
+                        title: 'All Day Event',
+                        start: '2019-03-12'
+                    }, {
+                        id: 1,
+                        title: '这是一个all-day数据',
+                        allDay: true,
+                        start: '2019-03-12'
+                    }, {
+                        id: 2,
+                        title: '开始时间为12PM',
+                        start: '2019-03-12 12:00'
+                    }, {
+                        id: 3,
+                        title: '给一点颜色',
+                        start: '2019-03-12',
+                        color: 'red'
+                    }, {
+                        id: 4,
+                        title: '使用className:done',
+                        start: '2019-03-12 09:00',
+                        end: '2019-03-12 18:00',
+                        color: 'blue',
+                        className: 'done'
+                    },{
+                        id: 5,
+                        title: '使用className:doing',
+                        start: '2019-03-12 09:00',
+                        end: '2019-03-12 18:00',
+                        color: 'green',
+                        className: 'doing'
+                    },{
+                        id: 6,
+                        title: '使用URL和字体颜色',
+                        start: '2019-03-12',
+                        color: 'pink',
+                        url: 'http://flovel.xyz',
+                        className: 'doing',
+                        textColor: 'black'
+                    },{
+                        id: 7,
+                        title: '使用backgroundColor和borderColor',
+                        start: '2019-03-12 09:00',
+                        end: '2019-03-12 18:00',
+                        backgroundColor: 'gray',
+                        borderColor: 'red',
+                        className: 'done'
+                    }]
             });
 
-            $("#calendar").fullCalendar( 'addEventSource', events);
         });
-
-        function drawCalendar(data) {
-            $("#calendar").fullCalendar( 'removeEvents');
-            var events=[];
-            for(var i=0, len=data.length; i<len; i++){
-                var timeDate=data[i];
-                //如果非整天时间，则显示时分数据
-                var isallDay=true;
-                if(timeDate["end"] !=null && timeDate["start"] != null){
-                    if(moment(timeDate["start"].replace(" ","T")).format("HH:mm") !== "00:00" || moment(timeDate["end"].replace(" ","T")).format("HH:mm") !== "00:00"){
-                        isallDay = false;
-                    }
-                }
-                var item={
-                    title : timeDate["title"],
-                    start : timeDate["start"].replace(" ","T"),
-                    className : "event-bar",
-                    allDay :  isallDay,
-                    end : timeDate["end"]==null ? "" : timeDate["end"].replace(" ","T"),
-                    backgroundColor : getCalendarColor(timeDate["user"]),
-                    user : timeDate["user"],
-                    startTime : timeDate["startTime"],
-                    endTime : timeDate["endTime"]
-                };
-                events.push(item);
-            }
-            $("#calendar").fullCalendar( 'addEventSource', events );
-        }
-
-
-
-
-
-
 
 
     </script>
-
-    <style type="text/css">
-
-
-    </style>
-
 
 
     <meta charset="UTF-8">
     <title>医生排班</title>
 
 
+    <style type="text/css">
+
+
+        /* 日历 */
+        #calendar {
+            margin: 40px auto;
+            padding: 0 10px;
+        }
+
+        /* Event 参数 className 的值 */
+        .done:before {
+            content: "【 已完成 】";
+            background-color: yellow;
+            color: green;
+            text-align: center;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        /* Event 参数 className 的值 */
+        .doing:before {
+            content: "【 未完成 】";
+            background-color: yellow;
+            color: red;
+            text-align: center;
+            font-weight: bold;
+        }
+
+    </style>
 </head>
 <body>
 
-<div id="calendar" class="container" style="margin-top: 100px">
-
-</div>
-
-
+<div id='calendar' class="container"></div>
 
 </body>
+
 </html>

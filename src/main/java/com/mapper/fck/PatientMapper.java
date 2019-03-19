@@ -47,4 +47,6 @@ public interface PatientMapper {
 
     void delpat(int patid);
 
+    List<Patient> getPatDid();
+
 }

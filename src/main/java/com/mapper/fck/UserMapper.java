@@ -4,6 +4,6 @@ import com.beans.fck.User;
 
 public interface UserMapper {
 
-    String loginUser(User user);
+//    String loginUser(User user);
 
 }

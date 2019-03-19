@@ -3,6 +3,7 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
+
   <display-name>Archetype Created Web Application</display-name>
 
   <!--配置spring文件-->
@@ -12,10 +13,41 @@
   </context-param>
 
 
+  <!-- shiro过虑器，DelegatingFilterProx会从spring容器中找shiroFilter -->
+  <filter>
+    <filter-name>shiroFilter</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <init-param>
+      <param-name>targetFilterLifecycle</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+
+
+
+  <filter-mapping>
+    <filter-name>shiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+
+
+
   <!--配置监听器-->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
+
+
+  <!--<servlet>-->
+    <!--<servlet-name>Kaptcha</servlet-name>-->
+    <!--<servlet-class>com.google.code.kaptcha.servlet.KaptchaServlet</servlet-class>-->
+  <!--</servlet>-->
+  <!--<servlet-mapping>-->
+    <!--<servlet-name>Kaptcha</servlet-name>-->
+    <!--<url-pattern>/kaptcha.jpg</url-pattern>-->
+  <!--</servlet-mapping>-->
+
 
   <servlet>
     <servlet-name>SpringMVC</servlet-name>
@@ -31,5 +63,10 @@
     <servlet-name>SpringMVC</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+
+
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
 
 </web-app>

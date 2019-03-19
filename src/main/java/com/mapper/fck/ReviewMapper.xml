@@ -5,11 +5,11 @@
 
 <mapper namespace="com.mapper.fck.ReviewMapper">
 
-    <insert id="addReview" parameterType="purchase">insert into review(pid,rnum,rpname,rmoney,rpdate,sid,rstate,rgo) values (#{pid},UUID_SHORT(),"K",#{pinamount},CURRENT_DATE,#{sid},0,0)</insert>
+    <insert id="addReview" parameterType="purchase">insert into review(pid,rnum,rpname,rmoney,rpdate,sid,rstate,rgo) values (#{pid},DATE_FORMAT(NOW(),'%Y%m%d%H%i%s'),"K",#{pinamount},CURRENT_DATE,#{sid},0,0)</insert>
 
     <select id="getReviewByAll" parameterType="page" resultType="review">select review.*,sname from review,supplier <where> review.sid=supplier.sid <if test="sid != 0"> and review.sid=#{sid}</if><if test="rnum != null"> and rnum like concat('%',#{rnum},'%')</if><if test="sdate != ''"> and rpdate &gt;= #{sdate} and rpdate &lt; '2500-1-1'</if><if test="edate != ''"> and  rpdate &lt;= #{edate} and rpdate &gt; '1500-1-1'</if><if test="rstate==0"> and rstate=0</if><if test="rstate==1"> and rstate=1</if> limit #{offset},#{limit}</where></select>
 
-    <select id="getCount" resultType="int">select COUNT(1) FROM review</select>
+    <select id="getCount" resultType="int" parameterType="page">select COUNT(1) FROM review<where><if test="rstate==0"> rstate=0</if><if test="rstate==1"> rstate=1</if></where></select>
 
     <delete id="delReview" parameterType="int">delete from review where rid = #{rid}</delete>
 
@@ -18,5 +18,7 @@
     <update id="goReview" parameterType="purchase">update review set rstate=1,rgo=1,rname="K",rdate=CURRENT_DATE where rid = #{rid}</update>
 
     <select id="getPid" parameterType="purchase" resultType="purchase">select pid from review where rid = #{rid}</select>
+
+    <select id="seeReview" parameterType="page" resultType="purchase">select pid,pname,purchase.sid,pcount,pweight,sname,pdec,tid,pinprice,poutprice,pinamount,poutamount from purchase,supplier where purchase.sid=supplier.sid and pid = (select pid from review where rid = #{rid}) </select>
 
 </mapper>

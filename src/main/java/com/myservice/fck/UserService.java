@@ -4,5 +4,5 @@ import com.beans.fck.User;
 
 public interface UserService {
 
-    String loginUser(User user);
+//    String loginUser(User user);
 }

@@ -1,6 +1,7 @@
 package com.beans.fck;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class Purchase {
     private int pid; //采购编号
@@ -20,16 +21,16 @@ public class Purchase {
 
     private int rid;//审核id
 
-    private int[] pids; //数组
+    private List<String> pids; //数组
 
     public Purchase() {
     }
 
-    public int[] getPids() {
+    public List<String> getPids() {
         return pids;
     }
 
-    public void setPids(int[] pids) {
+    public void setPids(List<String> pids) {
         this.pids = pids;
     }
 
@@ -171,7 +172,7 @@ public class Purchase {
                 ", tid=" + tid +
                 ", tname='" + tname + '\'' +
                 ", rid=" + rid +
-                ", pids=" + Arrays.toString(pids) +
+                ", pids=" + pids +
                 '}';
     }
 }

@@ -2,6 +2,7 @@ package com.mapper.fck;
 
 import com.beans.fck.Medicinal;
 import com.beans.fck.Page;
+import com.beans.fck.Purchase;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,19 @@ public interface MedicinalMapper {
 
     int getZeroCount();
 
+    int getPurCount();
+
     Medicinal addMedicinById(int mid);
+
+    void editprice(Medicinal medicinal);
+
+    List<Medicinal> getAllMedPur(Page page);
+
+    int getPid(Purchase purchase);
+
+    void updateCount(Purchase purchase);
+
+    List<Medicinal> getMedData();
+
 
 }

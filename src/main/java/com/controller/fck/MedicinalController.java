@@ -62,4 +62,39 @@ public class MedicinalController {
     }
 
 
+
+    @RequestMapping("/getAllmed")
+    @ResponseBody
+    public Map<String,Object> getAllmed(@RequestBody Page page){
+        return ms.getByNameAndTid(page);
+    }
+
+    @RequestMapping("/editprice")
+    @ResponseBody
+    public String editprice(Medicinal medicinal){
+        ms.editprice(medicinal);
+        return "1";
+    }
+
+
+    @RequestMapping("/getAllMedPur")
+    @ResponseBody
+    public Map<String,Object> getAllMedPur(@RequestBody Page page){
+        return ms.getAllMedPur(page);
+    }
+
+
+    @RequestMapping("/getMedData")
+    @ResponseBody
+    public List<Medicinal> getMedData(){
+        return ms.getMedData();
+    }
+
+
+
+
+
+
+
+
 }

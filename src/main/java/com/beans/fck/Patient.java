@@ -35,6 +35,12 @@ public class Patient {
     private double patrightview; // 右视力
     private String patnowtime;//修改时间
 
+
+    private int patdid; //医生
+    private String dname;
+
+    private int cot;//数据统计
+
     private Registered registered;
     private int rid;
 
@@ -42,6 +48,29 @@ public class Patient {
     public Patient() {
     }
 
+    public int getCot() {
+        return cot;
+    }
+
+    public void setCot(int cot) {
+        this.cot = cot;
+    }
+
+    public String getDname() {
+        return dname;
+    }
+
+    public void setDname(String dname) {
+        this.dname = dname;
+    }
+
+    public int getPatdid() {
+        return patdid;
+    }
+
+    public void setPatdid(int patdid) {
+        this.patdid = patdid;
+    }
 
     public String getStr_patdiatype() {
         return str_patdiatype;
@@ -359,8 +388,12 @@ public class Patient {
                 ", patleftview=" + patleftview +
                 ", patrightview=" + patrightview +
                 ", patnowtime='" + patnowtime + '\'' +
+                ", patdid=" + patdid +
+                ", dname='" + dname + '\'' +
+                ", cot=" + cot +
                 ", registered=" + registered +
                 ", rid=" + rid +
                 '}';
     }
+
 }

@@ -34,7 +34,7 @@ public class ReviewServicelmpl implements ReviewService {
     public Map<String, Object> getReviewByAll(Page page) {
         Map<String,Object> map = new HashMap<>();
         map.put("rows",reviewMapper.getReviewByAll(page));
-        map.put("total",reviewMapper.getCount());
+        map.put("total",reviewMapper.getCount(page));
         return map;
     }
 
@@ -53,10 +53,12 @@ public class ReviewServicelmpl implements ReviewService {
     public void goReview(Purchase purchase) {
         reviewMapper.goReview(purchase);
         reviewMapper.addReview(purchaseMapper.getPurchase(reviewMapper.getPid(purchase)));
+        PurchaseService ps = new PurchaseServicelmpl();
+        ps.PurchaseByGoPids(purchase);
     }
 
     @Override
-    public Purchase seeReview(Purchase purchase) {
-        return purchaseMapper.getPurchase(reviewMapper.getPid(purchase));
+    public Purchase seeReview(Page page) {
+        return reviewMapper.seeReview(page);
     }
 }

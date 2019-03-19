@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class PurchaseServicelmpl implements PurchaseService{
+public class PurchaseServicelmpl implements PurchaseService {
 
     @Autowired
     PurchaseMapper purchaseMapper;
@@ -29,9 +29,9 @@ public class PurchaseServicelmpl implements PurchaseService{
 
     @Override
     public Map<String, Object> getAllPurchaseByName(Page page) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("rows",purchaseMapper.getAllPurchaseByName(page));
-        map.put("total",purchaseMapper.getCount());
+        Map<String, Object> map = new HashMap<>();
+        map.put("rows", purchaseMapper.getAllPurchaseByName(page));
+        map.put("total", purchaseMapper.getCount(page));
         return map;
     }
 
@@ -43,15 +43,15 @@ public class PurchaseServicelmpl implements PurchaseService{
     @Override
     public void addPurchase(Purchase purchase) {
         Purchase p = purchaseMapper.getPurchase(purchase);
-        p.setPp("DYF00"+p.getPid());
+        p.setPp("DYF00" + p.getPid());
         purchaseMapper.addPurchase(p);
     }
 
     @Override
     public Map<String, Object> getLibrary(Page page) {
-        Map<String,Object> map = new HashMap<>();
-        map.put("rows",purchaseMapper.getLibrary(page));
-        map.put("total",medicinalMapper.getCount(page));
+        Map<String, Object> map = new HashMap<>();
+        map.put("rows", purchaseMapper.getLibrary(page));
+        map.put("total", medicinalMapper.getCount(page));
         return map;
     }
 
@@ -63,7 +63,7 @@ public class PurchaseServicelmpl implements PurchaseService{
     @Override
     public void getAllPurchase(Purchase purchase) {
         List<Purchase> allPurchase = purchaseMapper.getAllPurchase(purchase);
-        for (Purchase p:allPurchase) {
+        for (Purchase p : allPurchase) {
             reviewMapper.addReview(p);
         }
     }
@@ -72,9 +72,19 @@ public class PurchaseServicelmpl implements PurchaseService{
     @Override
     public void PurchaseByGoPids(Purchase purchase) {
         List<Purchase> allPurchase = purchaseMapper.getAllPurchase(purchase);
-        purchase.setPp("DYF00"+purchase.getPid());
-        for (Purchase p:allPurchase) {
-            purchaseMapper.addPurchase(p);
+        for (Purchase p : allPurchase) {
+            int pid = medicinalMapper.getPid(p);
+            if (pid == 0) {
+                purchase.setPp("DYF00" + purchase.getPid());
+                purchaseMapper.addPurchase(p);
+            } else {
+                medicinalMapper.updateCount(p);
+            }
         }
+    }
+
+    @Override
+    public List<Purchase> getPurByAddId(Purchase purchase) {
+        return purchaseMapper.getAllPurchase(purchase);
     }
 }

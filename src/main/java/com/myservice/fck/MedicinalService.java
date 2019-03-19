@@ -18,4 +18,12 @@ public interface MedicinalService {
     Map<String,Object> getMedicById(Page page);
 
     Medicinal addMedicinById(int mid);
+
+    void editprice(Medicinal medicinal);
+
+    Map<String,Object> getAllMedPur(Page page);
+
+    List<Medicinal> getMedData();
+
+
 }

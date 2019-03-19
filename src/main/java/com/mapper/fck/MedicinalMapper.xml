@@ -11,8 +11,13 @@
         <result column="mcount" property="mcount"></result>
         <result column="mweight" property="mweight"></result>
         <result column="mspec" property="mspec"></result>
-        <result column="mfactory" property="mfactory"></result>
+        <result column="sid" property="sid"></result>
+        <result column="minprice" property="minprice"></result>
         <result column="mdate" property="mdate"></result>
+        <result column="moutprice" property="moutprice"></result>
+        <result column="minamount" property="minamount"></result>
+        <result column="moutamount" property="moutamount"></result>
+        <result column="mjudge" property="mjudge"></result>
         <association property="mtype" javaType="mtype">
             <id column="tid" property="tid"></id>
             <result column="tname" property="tname"></result>
@@ -24,7 +29,7 @@
     </resultMap>
 
 
-    <sql id="medics">mid,mname,mcount,mweight,mspec,sname,mdate,tname</sql>
+    <sql id="medics">mid,mname,mcount,mweight,mspec,sname,mdate,tname,minprice,moutprice,minamount,moutamount</sql>
 
     <select id="getAllMedicinal" resultMap="medic">select <include refid="medics"></include> from medicinal,mtype,supplier where medicinal.tid=mtype.tid and medicinal.sid=supplier.sid and mjudge=1</select>
 
@@ -39,5 +44,17 @@
     <select id="getZeroCount" resultType="int">select COUNT(1) FROM medicinal where mjudge = 0</select>
 
     <select id="addMedicinById" resultType="medicinal" parameterType="int">select mid,mname,mcount,moutprice from medicinal where mid=#{mid}</select>
+
+    <update id="editprice" parameterType="medicinal">update medicinal set moutprice=#{moutprice},moutamount=mcount*#{moutprice} where mid=#{mid}</update>
+
+    <select id="getAllMedPur" parameterType="page" resultType="medicinal">select medicinal.rnum,mid,mname,mcount,mweight,mspec,sname,mdate,tname,minprice,moutprice,minamount,moutamount from medicinal,mtype,supplier,review,purchase <where>review.pid=purchase.pid and medicinal.pid=purchase.pid and medicinal.tid=mtype.tid and medicinal.sid=supplier.sid<if test="mname != null"> and mname like concat('%',#{mname},'%')</if> limit #{offset},#{limit}</where></select>
+
+    <select id="getPurCount" resultType="int">select COUNT(1) FROM medicinal,purchase where medicinal.pid=purchase.pid</select>
+
+    <select id="getPid" resultType="int" parameterType="purchase">select count(1) from medicinal where pid=#{pid}</select>
+
+    <update id="updateCount" parameterType="purchase">update medicinal set mcount=mcount+1 where pid=#{pid}</update>
+
+    <select id="getMedData" resultType="medicinal">select count(1) cot,tname from medicinal,mtype where medicinal.tid=mtype.tid group by tname</select>
 
 </mapper>

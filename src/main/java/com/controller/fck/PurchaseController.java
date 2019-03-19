@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,18 @@ public class PurchaseController {
         return ps.getSurIdName();
     }
 
+
+    @RequestMapping("/getPurByAddId")
+    @ResponseBody
+    public List<Purchase> getPurByAddId(String strpids) {
+        String[] split = strpids.split(",");
+        List<String> pids = Arrays.asList(split);
+        Purchase purchase = new Purchase();
+        purchase.setPids(pids);
+        return ps.getPurByAddId(purchase);
+    }
+
+
     @RequestMapping("/addPurchase")
     @ResponseBody
     public String addPurchase(Purchase purchase) {
@@ -42,6 +55,7 @@ public class PurchaseController {
     public Map<String, Object> getLibrary(@RequestBody Page page) {
         return ps.getLibrary(page);
     }
+
 
     @RequestMapping("/delLibrary")
     @ResponseBody
@@ -60,14 +74,9 @@ public class PurchaseController {
     @RequestMapping("/PurchaseByGoPids")
     @ResponseBody
     public String PurchaseByGoPids(Purchase purchase) {
-       ps.PurchaseByGoPids(purchase);
+        ps.PurchaseByGoPids(purchase);
         return "1";
     }
-
-
-
-
-
 
 
 }

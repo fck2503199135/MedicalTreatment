@@ -1,7 +1,9 @@
 $(document).ready(function () {
     /**
      * Line Chart
+     *
      */
+
     var lineChart = $('#line-chart');
 
     if (lineChart.length > 0) {
@@ -38,45 +40,64 @@ $(document).ready(function () {
     var barChart = $('#bar-chart');
 
     if (barChart.length > 0) {
-        new Chart(barChart, {
-            type: 'bar',
-            data: {
-                labels: ["Red", "Blue", "Cyan", "Green", "Purple", "Orange"],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(244, 88, 70, 0.5)',
-                        'rgba(33, 150, 243, 0.5)',
-                        'rgba(0, 188, 212, 0.5)',
-                        'rgba(42, 185, 127, 0.5)',
-                        'rgba(156, 39, 176, 0.5)',
-                        'rgba(253, 178, 68, 0.5)'
-                    ],
-                    borderColor: [
-                        '#F45846',
-                        '#2196F3',
-                        '#00BCD4',
-                        '#2ab97f',
-                        '#9C27B0',
-                        '#fdb244'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
+
+        var d = new Array();
+        var e = new Array();
+
+        $.ajax({
+            type: "post",
+            url: "getPdid",
+            dateType: "json",
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    d.push(data[i].dname);
+                    e.push(data[i].cot)
                 }
+
+                new Chart(barChart, {
+                    type: 'bar',
+                    data: {
+                        labels: d,
+                        datasets: [{
+                            label: '# of Votes',
+                            data: e,
+                            backgroundColor: [
+                                'rgba(244, 88, 70, 0.5)',
+                                'rgba(33, 150, 243, 0.5)',
+                                'rgba(0, 188, 212, 0.5)',
+                                'rgba(42, 185, 127, 0.5)',
+                                'rgba(156, 39, 176, 0.5)',
+                                'rgba(253, 178, 68, 0.5)'
+                            ],
+                            borderColor: [
+                                '#F45846',
+                                '#2196F3',
+                                '#00BCD4',
+                                '#2ab97f',
+                                '#9C27B0',
+                                '#fdb244'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        legend: {
+                            display: false
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+
+
             }
         });
+
     }
 
     /**
@@ -85,6 +106,7 @@ $(document).ready(function () {
     var radarChart = $('#radar-chart');
 
     if (radarChart.length > 0) {
+
         new Chart(radarChart, {
             type: 'radar',
             data: {
@@ -111,34 +133,54 @@ $(document).ready(function () {
      */
     var pieChart = $('#pie-chart');
 
+
     if (pieChart.length > 0) {
-        new Chart(pieChart, {
-            type: 'pie',
-            data: {
-                labels: ["Red", "Blue", "Cyan", "Green", "Purple", "Orange"],
-                datasets: [{
-                    label: 'Users',
-                    data: [100, 45, 87, 50, 77, 20],
-                    backgroundColor: [
-                        'rgba(244, 88, 70, 0.5)',
-                        'rgba(33, 150, 243, 0.5)',
-                        'rgba(0, 188, 212, 0.5)',
-                        'rgba(42, 185, 127, 0.5)',
-                        'rgba(156, 39, 176, 0.5)',
-                        'rgba(253, 178, 68, 0.5)'
-                    ],
-                    borderColor: [
-                        'rgba(244, 88, 70, 0.5)',
-                        'rgba(33, 150, 243, 0.5)',
-                        'rgba(0, 188, 212, 0.5)',
-                        'rgba(42, 185, 127, 0.5)',
-                        'rgba(156, 39, 176, 0.5)',
-                        'rgba(253, 178, 68, 0.5)'
-                    ],
-                    borderWidth: 1
-                }]
+
+        var c = new Array();
+        var b = new Array();
+
+        $.ajax({
+            type: "post",
+            url: "getMedData",
+            dateType: "json",
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    c.push(data[i].tname);
+                    b.push(data[i].cot)
+                }
+                new Chart(pieChart, {
+                    type: 'pie',
+                    data: {
+                        labels: c,
+                        datasets: [{
+                            label: 'Users',
+                            data: b,
+                            backgroundColor: [
+                                'rgba(244, 88, 70, 0.5)',
+                                'rgba(33, 150, 243, 0.5)',
+                                'rgba(0, 188, 212, 0.5)',
+                                'rgba(42, 185, 127, 0.5)',
+                                'rgba(156, 39, 176, 0.5)',
+                                'rgba(253, 178, 68, 0.5)'
+                            ],
+                            borderColor: [
+                                'rgba(244, 88, 70, 0.5)',
+                                'rgba(33, 150, 243, 0.5)',
+                                'rgba(0, 188, 212, 0.5)',
+                                'rgba(42, 185, 127, 0.5)',
+                                'rgba(156, 39, 176, 0.5)',
+                                'rgba(253, 178, 68, 0.5)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    }
+                });
+
             }
+
         });
+
+
     }
 
     /**

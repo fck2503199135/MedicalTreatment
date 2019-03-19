@@ -152,7 +152,11 @@ public class PatientController {
 
 
 
-
+    @RequestMapping("/getPdid")
+    @ResponseBody
+    public List<Patient> getPatDid() {
+        return ps.getPatDid();
+    }
 
 
 

@@ -5,6 +5,7 @@ public class Medicinal {
     private String medid; //药品标号
     private String mname;  //药品名称
     private int tid;   //药品种类标号
+    private String tname;
     private Mtype mtype;  // 种类名称
     private int mcount;   // 药品库存
     private String mweight;  //重量单位
@@ -19,8 +20,45 @@ public class Medicinal {
     private double moutamount; // 处方额
     private String mjudge; //判断是否在维护
 
+    private String rnum;//采购编号
+    private int pid;// 采购序号
+
+    private int cot;//数据统计
+
 
     public Medicinal() {
+    }
+
+    public int getCot() {
+        return cot;
+    }
+
+    public void setCot(int cot) {
+        this.cot = cot;
+    }
+
+    public int getPid() {
+        return pid;
+    }
+
+    public void setPid(int pid) {
+        this.pid = pid;
+    }
+
+    public String getTname() {
+        return tname;
+    }
+
+    public void setTname(String tname) {
+        this.tname = tname;
+    }
+
+    public String getRnum() {
+        return rnum;
+    }
+
+    public void setRnum(String rnum) {
+        this.rnum = rnum;
     }
 
     public Supplier getSupplier() {
@@ -160,6 +198,7 @@ public class Medicinal {
         this.mdate = mdate;
     }
 
+
     @Override
     public String toString() {
         return "Medicinal{" +
@@ -167,6 +206,7 @@ public class Medicinal {
                 ", medid='" + medid + '\'' +
                 ", mname='" + mname + '\'' +
                 ", tid=" + tid +
+                ", tname='" + tname + '\'' +
                 ", mtype=" + mtype +
                 ", mcount=" + mcount +
                 ", mweight='" + mweight + '\'' +
@@ -180,6 +220,9 @@ public class Medicinal {
                 ", minamount=" + minamount +
                 ", moutamount=" + moutamount +
                 ", mjudge='" + mjudge + '\'' +
+                ", rnum='" + rnum + '\'' +
+                ", pid=" + pid +
+                ", cot=" + cot +
                 '}';
     }
 }

@@ -87,6 +87,6 @@
 
     <delete id="delpat" parameterType="int">delete from patient where patid=#{patid}</delete>
 
-
+    <select id="getPatDid" resultType="patient" >select count(1) cot,dname from patient,doctor where doctor.did=patient.patdid group by dname</select>
 
 </mapper>

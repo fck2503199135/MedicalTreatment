@@ -24,4 +24,6 @@ public interface PurchaseService {
 
    void PurchaseByGoPids(Purchase purchase);
 
+   List<Purchase> getPurByAddId(Purchase purchase);
+
 }

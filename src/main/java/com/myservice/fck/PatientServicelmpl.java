@@ -112,4 +112,10 @@ public class PatientServicelmpl implements PatientService {
     public void delpat(int patid) {
         patientMapper.delpat(patid);
     }
+
+
+    @Override
+    public List<Patient> getPatDid() {
+        return patientMapper.getPatDid();
+    }
 }
