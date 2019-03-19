@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mapper.UserMapper">
+
+    
+<select id="getUser" parameterType="String" resultType="user">
+      select * from  user  where username=#{value }
+</select>
+
+<insert id="addUser" parameterType="user">
+      insert  into user(username,password,pid) value (#{username},#{password},3)
+</insert>
+
+      <!--<select id="getRolesByUid" parameterType="user" resultType="post">-->
+
+      <!--</select>-->
+      
+      <!--<select id="aaa" resultType="patient">-->
+            <!--select count(1) cot,dname from patient,doctor where did=patdid group by dname-->
+      <!--</select>-->
+
+</mapper>
